@@ -128,7 +128,7 @@
             loginError.textContent = '';
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) {
-                loginError.textContent = 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
+                loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
             } else {
                 loginBox.style.display = 'none';
                 mainContent.style.display = 'flex';
