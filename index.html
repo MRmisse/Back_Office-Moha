@@ -128,6 +128,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
             loginError.textContent = '';
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                console.log('Supabase response:', { data, error });
                 if (error) {
                     loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
                 } else {
@@ -135,6 +136,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                     mainContent.style.display = 'flex';
                 }
             } catch (err) {
+                console.error('Unexpected error:', err);
                 loginError.textContent = err.message || 'حدث خطأ غير متوقع.';
             }
         });
