@@ -4,11 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة جديدة</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.5rem;
+            color: #2d3a4b;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+        }
+        h1 {
+            color: #3a4d6b;
+            margin-bottom: 30px;
+        }
+        button {
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            margin: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+        }
+        button:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            transform: translateY(-3px) scale(1.05);
+        }
+    </style>
 </head>
 <body>
-    <h1>مرحباً بك في صفحتك الجديدة!</h1>
-    <button onclick="window.location.href='https://www.google.com'">جوجل</button>
-    <button onclick="window.location.href='https://www.youtube.com'">يوتيوب</button>
-    <button onclick="window.location.href='https://www.facebook.com'">فيسبوك</button>
+    <div class="header">Back Office Engineer</div>
+    <div class="container">
+        <h1>مرحباً بك في صفحتك الجديدة!</h1>
+        <button onclick="window.location.href='https://www.google.com'">جوجل</button>
+        <button onclick="window.location.href='https://www.youtube.com'">يوتيوب</button>
+        <button onclick="window.location.href='https://www.facebook.com'">فيسبوك</button>
+    </div>
 </body>
 </html>
