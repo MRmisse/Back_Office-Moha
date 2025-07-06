@@ -126,12 +126,16 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             loginError.textContent = '';
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
-            } else {
-                loginBox.style.display = 'none';
-                mainContent.style.display = 'flex';
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
+                } else {
+                    loginBox.style.display = 'none';
+                    mainContent.style.display = 'flex';
+                }
+            } catch (err) {
+                loginError.textContent = err.message || 'حدث خطأ غير متوقع.';
             }
         });
     </script>
