@@ -22,9 +22,11 @@
         }
         .container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
             margin-top: 60px;
+            gap: 20px;
         }
         h1 {
             color: #3a4d6b;
@@ -51,10 +53,9 @@
 <body>
     <div class="header">Back Office Engineer</div>
     <div class="container">
-        <h1>مرحباً بك في صفحتك الجديدة!</h1>
-        <button onclick="window.location.href='https://www.google.com'">جوجل</button>
-        <button onclick="window.location.href='https://www.youtube.com'">يوتيوب</button>
-        <button onclick="window.location.href='https://www.facebook.com'">فيسبوك</button>
+        <button onclick="window.open('http://10.6.115.5:4750/login', '_blank')">tuuunel</button>
+        <button onclick="window.open('https://192.168.219.126', '_blank')">ZABBIX</button>
+        <button onclick="window.open('http://10.6.115.5:4500/dashboard', '_blank')">NOC Portal</button>
     </div>
 </body>
 </html>
