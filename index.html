@@ -178,7 +178,6 @@
         <button onclick="window.open('https://sso.ftth.iq/auth/admin/master/console/#/realms/Customers/users', '_blank')">SSO FTTH</button>
         <button onclick="window.open('https://alwatani-requests.netlify.app/vacations.html', '_blank')">Vacation Calendar</button>
         <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
-        <button onclick="window.open('http://10.6.115.5:4750/login', '_blank')">tuuunel</button>
         <div class="dropdown">
             <button class="dropbtn">Grafana</button>
             <div class="dropdown-content">
@@ -187,7 +186,6 @@
                 <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1&viewPanel=35', '_blank')">Active Users </button>
             </div>
         </div>
-    </div>
         <div class="dropdown">
             <button class="dropbtn">JW</button>
             <div class="dropdown-content">
@@ -195,13 +193,11 @@
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_ZoneUpgrade/FTTH_ZoneUpgradeView/_/inbox', '_blank')">ZONE UPGRADE #67 </button>
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneOnboarding/virtualZoneOnboarding/_/inbox', '_blank')">VIRTUAL ZONE #77 </button>
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/fdtDeactivationProcess/fdtDeactivationProcess/_/inbox', '_blank')">Deactivation ZONE #74 </button>
-              <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85 </button>
-
-
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85 </button>
             </div>
         </div>
     </div>
-    <button id="logout-btn" class="logout-btn">تسجيل الخروج</button>
+    <button id="logout-btn" class="logout-btn" style="display:none;">تسجيل الخروج</button>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
         // ضع هنا بيانات مشروعك من supabase
@@ -213,6 +209,7 @@
         const loginBox = document.getElementById('login-box');
         const mainContent = document.getElementById('main-content');
         const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
 
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -227,6 +224,7 @@
                 } else {
                     loginBox.style.display = 'none';
                     mainContent.style.display = 'flex';
+                    logoutBtn.style.display = 'inline-block';
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
@@ -234,10 +232,11 @@
             }
         });
 
-        document.getElementById('logout-btn').addEventListener('click', async function() {
+        logoutBtn.addEventListener('click', async function() {
             await supabase.auth.signOut();
             mainContent.style.display = 'none';
             loginBox.style.display = 'flex';
+            logoutBtn.style.display = 'none';
             loginForm.reset();
         });
     </script>
