@@ -339,10 +339,31 @@
             document.querySelectorAll('#feedback-templates .button').forEach(btn => {
                 if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
                     btn.style.display = 'block';
+                    // إضافة مستمع نسخ عند الضغط
+                    btn.onclick = async function() {
+                        const filePath = btn.getAttribute('onclick')?.match(/'([^']+)'/);
+                        if (filePath && filePath[1]) {
+                            await copyTemplateText(filePath[1]);
+                        }
+                    };
                 }
             });
             document.getElementById('show-templates-btn').style.display = 'none';
         }
+
+        // دالة نسخ نص القالب من الملف
+        async function copyTemplateText(filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error('لم يتم العثور على الملف');
+                const text = await response.text();
+                await navigator.clipboard.writeText(text);
+                alert('تم نسخ النص بنجاح!');
+            } catch (e) {
+                alert('حدث خطأ أثناء النسخ: ' + e.message);
+            }
+        }
+
         function hideFeedBackTemplates() {
             document.getElementById('feedback-templates').classList.add('hidden');
             document.getElementById('main-buttons').classList.remove('hidden');
