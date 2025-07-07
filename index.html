@@ -22,32 +22,40 @@
             text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
         }
         .container {
-            display: flex;
-            flex-direction: row;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
             justify-content: center;
-            align-items: center;
-            margin-top: 60px;
-            gap: 20px;
+            align-items: start;
+            margin: 60px auto 0 auto;
+            max-width: 1100px;
+            width: 95%;
         }
         h1 {
             color: #3a4d6b;
             margin-bottom: 30px;
         }
-        button {
+        button, .dropbtn {
             background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 15px 40px;
-            margin: 10px;
-            font-size: 1.2rem;
+            border-radius: 18px;
+            padding: 18px 0;
+            margin: 0;
+            font-size: 1.15rem;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px rgba(78,84,200,0.08);
+            width: 100%;
+            min-width: 0;
+            font-family: inherit;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
-        button:hover {
+        button:hover, .dropbtn:hover {
             background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
-            transform: translateY(-3px) scale(1.05);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 18px rgba(78,84,200,0.13);
         }
         .login-box {
             max-width: 400px;
@@ -113,32 +121,22 @@
         }
         .dropdown {
             position: relative;
-            display: inline-block;
+            width: 100%;
         }
         .dropbtn {
             background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 10px;
-            transition: background 0.3s, transform 0.2s;
-        }
-        .dropbtn:hover {
-            background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%);
-            transform: scale(1.05);
+            margin: 0;
         }
         .dropdown-content {
             display: none;
             position: absolute;
             background: #223a5e;
-            min-width: 180px;
+            min-width: 200px;
             box-shadow: 0 8px 16px rgba(34,58,94,0.15);
             border-radius: 12px;
             z-index: 1;
             right: 0;
+            top: 110%;
         }
         .dropdown-content button {
             background: none;
@@ -223,7 +221,7 @@
                     loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
                 } else {
                     loginBox.style.display = 'none';
-                    mainContent.style.display = 'flex';
+                    mainContent.style.display = 'grid';
                     logoutBtn.style.display = 'inline-block';
                 }
             } catch (err) {
