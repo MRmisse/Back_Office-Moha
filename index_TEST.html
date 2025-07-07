@@ -1,1 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Page</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #192d61 0%, #223a5e 100%);
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.5rem;
+            color: #f5f6fa;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            justify-content: center;
+            align-items: start;
+            margin: 60px auto 0 auto;
+            max-width: 1100px;
+            width: 95%;
+        }
+        h1 {
+            color: #3a4d6b;
+            margin-bottom: 30px;
+        }
+        button, .dropbtn {
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 18px 0;
+            margin: 0;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px rgba(78,84,200,0.08);
+            width: 100%;
+            min-width: 0;
+            font-family: inherit;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        button:hover, .dropbtn:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 18px rgba(78,84,200,0.13);
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #f5f6fa;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+        }
+        .login-box button:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            transform: translateY(-3px) scale(1.05);
+        }
+        .logout-btn {
+            position: fixed;
+            top: 18px;
+            right: 24px;
+            background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 7px 22px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255,88,88,0.10);
+            cursor: pointer;
+            z-index: 2000;
+            transition: background 0.3s, transform 0.2s;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+            display: none;
+        }
+        .logout-btn.show {
+            display: block;
+        }
+        .logout-btn:hover {
+            background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+            transform: scale(1.04) rotate(-2deg);
+        }
+        .dropdown {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+        .dropbtn {
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+            margin: 0;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #223a5e;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(34,58,94,0.15);
+            border-radius: 12px;
+            z-index: 100;
+            right: 0;
+            top: 110%;
+        }
+        .dropdown.open .dropdown-content {
+            display: block;
+        }
+        .dropdown-content button {
+            background: none;
+            color: #fff;
+            padding: 12px 18px;
+            width: 100%;
+            border: none;
+            text-align: right;
+            border-radius: 0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .dropdown-content button:hover {
+            background: #162447;
+        }
+        #copy-success {
+            display:none;
+            position:fixed;
+            top:30px;
+            right:30px;
+            z-index:3000;
+            background:#27ae60;
+            color:#fff;
+            padding:12px 28px;
+            border-radius:30px;
+            font-size:1.1rem;
+            box-shadow:0 2px 12px #27ae6040;
+            transition:opacity 0.4s;
+            opacity:0;
+            align-items:center;
+            gap:10px;
+        }
+        #copy-success.show {
+            display: flex;
+            opacity: 1;
+        }
+        button.copied {
+            background: linear-gradient(90deg, #27ae60 0%, #43e97b 100%) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 16px #27ae6040;
+            transition: background 0.3s, color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Back Office Engineer</div>
+    <div class="login-box" id="login-box">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+            <div id="login-error" style="color:#ffb3b3; margin-top:10px;"></div>
+        </form>
+    </div>
 
+<div id="feedback-templates" class="hidden container" style="margin-top:40px;">
+    <button class="button" onclick="hideFeedBackTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/templates1.txt', ' حل مشكلة الباور والقطع ')" style="display:none;">حل مشكلة الباور والقطع</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template3.txt', ' تجديد اشتراك ')" style="display:none;">تجديد اشتراك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template4.txt', 'تأجيل الصيانة ')" style="display:none;">تأجيل الصيانة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template5.txt', ' رفض الصيانه (الخدمة طبيعية) ')" style="display:none;">رفض الصيانه (الخدمة طبيعية)</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template20.txt', ' الزبون رفض الخدمة  ')" style="display:none;">الزبون رفض الخدمة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template6.txt', 'عدم الرد على الاتصال')" style="display:none;">عدم الرد على الاتصال</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template7.txt', 'ضعف الخدمة  ')" style="display:none;">ضعف الخدمة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template8.txt', 'اليوزر اوفلاين  ')" style="display:none;">اليوزر اوفلاين</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template9.txt', 'جكة المبيعات  ')" style="display:none;">جكة المبيعات</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template10.txt', 'لم يتم حل الاشكال   ')" style="display:none;">لم يتم حل الاشكال</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template11.txt', ' مشكلة في العامود  ')" style="display:none;">مشكلة في العامود</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template12.txt', ' شكرا على المتابعه ')" style="display:none;">شكرا على المتابعه</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template13.txt', ' تم الاتصال وطلب صيانه ')" style="display:none;">تم الاتصال وطلب صيانه</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template15.txt', ' مشكلة في الايام الاضافية ')" style="display:none;">مشكلة في الايام الاضافية</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template16.txt', '  تغيير سيريال بدون صورة  ')" style="display:none;">تغيير سيريال بدون صورة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template27.txt', ' تغيير سيريال 360  ')" style="display:none;">تغيير سيريال 360</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template17.txt', ' طلب الغاء ريكوست جديد ')" style="display:none;">طلب الغاء ريكوست جديد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template19.txt', ' لا يشمل عرض الجديد  ')" style="display:none;">لا يشمل عرض الجديد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template21.txt')" style="display:none;">يرجى ذكر معلومات الاشتراك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template22.txt')" style="display:none;">جار المتابعه في تكت</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template23.txt')" style="display:none;">مشكلة عدم ملئ معلومات البطاقة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template24.txt')" style="display:none;">طلب تغيير زون لفيرجوال بيندنك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template25.txt')" style="display:none;">طلب تغيير باسورد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template26.txt')" style="display:none;">تغيير باسورد بدون باسورد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template28.txt')" style="display:none;">طلب تغيير زون</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template29.txt')" style="display:none;">دعوة صديق اكث من 2</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template30.txt')" style="display:none;">طلب نقل اشتراك من قبل الوكيل</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template31.txt')" style="display:none;">تطبيق شاهد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template32.txt')" style="display:none;">التجديد التلفائي</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template31.txt')" style="display:none;">test</button>
+    <button class="button" id="show-templates-btn" onclick="showTemplateButtons()" style="display:none;grid-column:1/-1;">عرض قوالب التغذية</button>
+</div>
+    
+    <div class="container" id="main-buttons" style="display:none;">
+     <button class="button" onclick="showFeedBackTemplates()">Feed Back Templates</button>
+        <button onclick="window.open('QGIS-MOHA.html', '_blank')">QGIS-MOHA</button>
+        <button onclick="window.open('http://10.6.115.5:4750/login', '_blank')">tuuunel</button>
+        <button onclick="window.open('https://192.168.219.126/zabbix.php?action=dashboard.view', '_blank')">ZABBIX</button>
+        <button onclick="window.open('http://10.6.115.5:4500/dashboard', '_blank')">NOC Portal</button>
+        <button onclick="window.open('https://sso.ftth.iq/auth/admin/master/console/#/realms/Customers/users', '_blank')">SSO FTTH</button>
+        <button onclick="window.open('https://alwatani-requests.netlify.app/vacations.html', '_blank')">Vacation Calendar</button>
+        <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
+        <div class="dropdown">
+            <button class="dropbtn" tabindex="0">Grafana</button>
+            <div class="dropdown-content">
+                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1', '_blank')">FTTH Online Users</button>
+                <button onclick="window.open('https://dash.elcld.net/d/e2ae3a51-0940-463c-964a-d38ab54f224d/04236846-084b-576a-a37a-26c3246998dc?orgId=1&refresh=5m&viewPanel=45', '_blank')">Monitor FTTH Zones</button>
+                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1&viewPanel=35', '_blank')">Active Users</button>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn" tabindex="0">JW</button>
+            <div class="dropdown-content">
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_SiteDelivery/FTTH_SiteDeliveryView/_/inbox', '_blank')">ZONE DELIVERY #24</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_ZoneUpgrade/FTTH_ZoneUpgradeView/_/inbox', '_blank')">ZONE UPGRADE #67</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneOnboarding/virtualZoneOnboarding/_/inbox', '_blank')">VIRTUAL ZONE #77</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/fdtDeactivationProcess/fdtDeactivationProcess/_/inbox', '_blank')">Deactivation ZONE #74</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85</button>
+            </div>
+        </div>
+        <button onclick="showFeedBackTemplates()">Feed Templates</button>
+    </div>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+    <div id="copy-success" style="display:none;position:fixed;top:30px;right:30px;z-index:3000;background:#27ae60;color:#fff;padding:12px 28px;border-radius:30px;font-size:1.1rem;box-shadow:0 2px 12px #27ae6040;transition:opacity 0.4s;opacity:0;align-items:center;gap:10px;">
+        <span style="font-size:1.5em;vertical-align:middle;">✔️</span> تم النسخ
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // Place your Supabase project credentials here
+        const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const loginForm = document.getElementById('login-form');
+        const loginBox = document.getElementById('login-box');
+        const mainContent = document.getElementById('main-content');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const mainButtons = document.getElementById('main-buttons');
+        const feedbackTemplates = document.getElementById('feedback-templates');
+        const showTemplatesBtn = document.getElementById('show-templates-btn');
+        const backToMainBtn = document.querySelector("#feedback-templates button[onclick*='hideFeedBackTemplates']");
+
+        // Dropdown logic: keep menu open when hovering over button or menu
+        document.querySelectorAll('.dropdown').forEach(function(drop){
+            const btn = drop.querySelector('.dropbtn');
+            const content = drop.querySelector('.dropdown-content');
+            let over = false;
+            function openDropdown() {
+                drop.classList.add('open');
+            }
+            function closeDropdown() {
+                drop.classList.remove('open');
+            }
+            btn.addEventListener('mouseenter', openDropdown);
+            btn.addEventListener('focus', openDropdown);
+            btn.addEventListener('click', function(e){
+                e.stopPropagation();
+                drop.classList.toggle('open');
+            });
+            btn.addEventListener('mouseleave', function(){
+                setTimeout(function(){
+                    if (!over) closeDropdown();
+                }, 100);
+            });
+            content.addEventListener('mouseenter', function(){
+                over = true;
+                openDropdown();
+            });
+            content.addEventListener('mouseleave', function(){
+                over = false;
+                closeDropdown();
+            });
+        });
+        document.body.addEventListener('click', function(){
+            document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
+        });
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            loginError.textContent = '';
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                console.log('Supabase response:', { data, error });
+                if (error) {
+                    loginError.textContent = error.message || 'Invalid credentials or connection issue.';
+                } else {
+                    loginBox.style.display = 'none';
+                    mainButtons.style.display = 'grid';
+                    feedbackTemplates.classList.add('hidden');
+                    if (showTemplatesBtn) showTemplatesBtn.style.display = 'block';
+                    if (backToMainBtn) backToMainBtn.style.display = 'block';
+                    logoutBtn.classList.add('show');
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+                loginError.textContent = err.message || 'An unexpected error occurred.';
+            }
+        });
+
+        logoutBtn.addEventListener('click', async function() {
+            await supabase.auth.signOut();
+            mainButtons.style.display = 'none';
+            feedbackTemplates.classList.add('hidden');
+            if (showTemplatesBtn) showTemplatesBtn.style.display = 'none';
+            if (backToMainBtn) backToMainBtn.style.display = 'none';
+            loginBox.style.display = 'flex';
+            logoutBtn.classList.remove('show');
+            loginForm.reset();
+        });
+
+        function showFeedBackTemplates() {
+            document.getElementById('main-buttons').classList.add('hidden');
+            document.getElementById('feedback-templates').classList.remove('hidden');
+        }
+        function showTemplateButtons() {
+            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
+                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
+                    btn.style.display = 'block';
+                    btn.onclick = async function() {
+                        const filePath = btn.getAttribute('onclick')?.match(/'([^']+)'/);
+                        if (filePath && filePath[1]) {
+                            await copyTemplateText(filePath[1], btn);
+                        }
+                    };
+                }
+            });
+            document.getElementById('show-templates-btn').style.display = 'none';
+        }
+
+        // دالة نسخ نص القالب من الملف
+        async function copyTemplateText(filePath, btn) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error('لم يتم العثور على الملف');
+                const text = await response.text();
+                await navigator.clipboard.writeText(text);
+                if (btn) {
+                    btn.classList.add('copied');
+                    setTimeout(()=>btn.classList.remove('copied'), 2000);
+                }
+            } catch (e) {
+                alert('حدث خطأ أثناء النسخ: ' + e.message);
+            }
+        }
+        function showCopySuccess() {
+            const el = document.getElementById('copy-success');
+            if (!el) return;
+            el.classList.add('show');
+            setTimeout(()=>{el.classList.remove('show');}, 2000);
+        }
+
+        function hideFeedBackTemplates() {
+            document.getElementById('feedback-templates').classList.add('hidden');
+            document.getElementById('main-buttons').classList.remove('hidden');
+            // إخفاء الأزرار عند العودة
+            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
+                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
+                    btn.style.display = 'none';
+                }
+            });
+            document.getElementById('show-templates-btn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
