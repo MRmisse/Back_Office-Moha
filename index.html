@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة جديدة</title>
+    <title>New Page</title>
     <style>
         body {
             background: linear-gradient(135deg, #192d61 0%, #223a5e 100%);
@@ -170,11 +170,11 @@
 <body>
     <div class="header">Back Office Engineer</div>
     <div class="login-box" id="login-box">
-        <h2>تسجيل الدخول</h2>
+        <h2>Login</h2>
         <form id="login-form">
-            <input type="email" id="email" placeholder="البريد الإلكتروني" required />
-            <input type="password" id="password" placeholder="كلمة المرور" required />
-            <button type="submit">دخول</button>
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button type="submit">Login</button>
             <div id="login-error" style="color:#ffb3b3; margin-top:10px;"></div>
         </form>
     </div>
@@ -188,26 +188,26 @@
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">Grafana</button>
             <div class="dropdown-content">
-                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1', '_blank')">FTTH Online Users </button>
-                <button onclick="window.open('https://dash.elcld.net/d/e2ae3a51-0940-463c-964a-d38ab54f224d/04236846-084b-576a-a37a-26c3246998dc?orgId=1&refresh=5m&viewPanel=45', '_blank')">Monitor FTTH Zones </button>
-                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1&viewPanel=35', '_blank')">Active Users </button>
+                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1', '_blank')">FTTH Online Users</button>
+                <button onclick="window.open('https://dash.elcld.net/d/e2ae3a51-0940-463c-964a-d38ab54f224d/04236846-084b-576a-a37a-26c3246998dc?orgId=1&refresh=5m&viewPanel=45', '_blank')">Monitor FTTH Zones</button>
+                <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1&viewPanel=35', '_blank')">Active Users</button>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">JW</button>
             <div class="dropdown-content">
-                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_SiteDelivery/FTTH_SiteDeliveryView/_/inbox', '_blank')">ZONE DELIVERY #24 </button>
-                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_ZoneUpgrade/FTTH_ZoneUpgradeView/_/inbox', '_blank')">ZONE UPGRADE #67 </button>
-                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneOnboarding/virtualZoneOnboarding/_/inbox', '_blank')">VIRTUAL ZONE #77 </button>
-                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/fdtDeactivationProcess/fdtDeactivationProcess/_/inbox', '_blank')">Deactivation ZONE #74 </button>
-                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85 </button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_SiteDelivery/FTTH_SiteDeliveryView/_/inbox', '_blank')">ZONE DELIVERY #24</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_ZoneUpgrade/FTTH_ZoneUpgradeView/_/inbox', '_blank')">ZONE UPGRADE #67</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneOnboarding/virtualZoneOnboarding/_/inbox', '_blank')">VIRTUAL ZONE #77</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/fdtDeactivationProcess/fdtDeactivationProcess/_/inbox', '_blank')">Deactivation ZONE #74</button>
+                <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85</button>
             </div>
         </div>
     </div>
-    <button id="logout-btn" class="logout-btn">تسجيل الخروج</button>
+    <button id="logout-btn" class="logout-btn">Logout</button>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        // ضع هنا بيانات مشروعك من supabase
+        // Place your Supabase project credentials here
         const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw";
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -218,7 +218,7 @@
         const loginError = document.getElementById('login-error');
         const logoutBtn = document.getElementById('logout-btn');
 
-        // منطق dropdown لإبقاء القائمة مفتوحة عند المرور على الزر أو القائمة نفسها
+        // Dropdown logic: keep menu open when hovering over button or menu
         document.querySelectorAll('.dropdown').forEach(function(drop){
             const btn = drop.querySelector('.dropbtn');
             const content = drop.querySelector('.dropdown-content');
@@ -262,7 +262,7 @@
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 console.log('Supabase response:', { data, error });
                 if (error) {
-                    loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
+                    loginError.textContent = error.message || 'Invalid credentials or connection issue.';
                 } else {
                     loginBox.style.display = 'none';
                     mainContent.style.display = 'grid';
@@ -270,7 +270,7 @@
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
-                loginError.textContent = err.message || 'حدث خطأ غير متوقع.';
+                loginError.textContent = err.message || 'An unexpected error occurred.';
             }
         });
 
