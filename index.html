@@ -218,16 +218,35 @@
         const loginError = document.getElementById('login-error');
         const logoutBtn = document.getElementById('logout-btn');
 
-        // منطق dropdown لإبقاء القائمة مفتوحة عند المرور أو التركيز
+        // منطق dropdown لإبقاء القائمة مفتوحة عند المرور على الزر أو القائمة نفسها
         document.querySelectorAll('.dropdown').forEach(function(drop){
             const btn = drop.querySelector('.dropbtn');
+            const content = drop.querySelector('.dropdown-content');
+            let over = false;
+            function openDropdown() {
+                drop.classList.add('open');
+            }
+            function closeDropdown() {
+                drop.classList.remove('open');
+            }
+            btn.addEventListener('mouseenter', openDropdown);
+            btn.addEventListener('focus', openDropdown);
             btn.addEventListener('click', function(e){
                 e.stopPropagation();
-                document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
                 drop.classList.toggle('open');
             });
-            drop.addEventListener('mouseleave', function(){
-                drop.classList.remove('open');
+            btn.addEventListener('mouseleave', function(){
+                setTimeout(function(){
+                    if (!over) closeDropdown();
+                }, 100);
+            });
+            content.addEventListener('mouseenter', function(){
+                over = true;
+                openDropdown();
+            });
+            content.addEventListener('mouseleave', function(){
+                over = false;
+                closeDropdown();
             });
         });
         document.body.addEventListener('click', function(){
