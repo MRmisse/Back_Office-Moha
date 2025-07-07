@@ -51,6 +51,7 @@
             font-family: inherit;
             font-weight: 500;
             letter-spacing: 0.5px;
+            position: relative;
         }
         button:hover, .dropbtn:hover {
             background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
@@ -101,27 +102,35 @@
         }
         .logout-btn {
             position: fixed;
-            top: 30px;
-            right: 40px;
+            top: 18px;
+            right: 24px;
             background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
             color: #fff;
             border: none;
             border-radius: 50px;
-            padding: 14px 38px;
-            font-size: 1.1rem;
+            padding: 7px 22px;
+            font-size: 0.95rem;
             font-weight: bold;
-            box-shadow: 0 4px 18px rgba(255,88,88,0.15);
+            box-shadow: 0 2px 10px rgba(255,88,88,0.10);
             cursor: pointer;
-            z-index: 1000;
+            z-index: 2000;
             transition: background 0.3s, transform 0.2s;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+            display: none;
+        }
+        .logout-btn.show {
+            display: block;
         }
         .logout-btn:hover {
             background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
-            transform: scale(1.08) rotate(-2deg);
+            transform: scale(1.04) rotate(-2deg);
         }
         .dropdown {
             position: relative;
             width: 100%;
+            display: block;
         }
         .dropbtn {
             background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
@@ -134,9 +143,12 @@
             min-width: 200px;
             box-shadow: 0 8px 16px rgba(34,58,94,0.15);
             border-radius: 12px;
-            z-index: 1;
+            z-index: 100;
             right: 0;
             top: 110%;
+        }
+        .dropdown.open .dropdown-content {
+            display: block;
         }
         .dropdown-content button {
             background: none;
@@ -152,9 +164,6 @@
         }
         .dropdown-content button:hover {
             background: #162447;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
         }
     </style>
 </head>
@@ -177,7 +186,7 @@
         <button onclick="window.open('https://alwatani-requests.netlify.app/vacations.html', '_blank')">Vacation Calendar</button>
         <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
         <div class="dropdown">
-            <button class="dropbtn">Grafana</button>
+            <button class="dropbtn" tabindex="0">Grafana</button>
             <div class="dropdown-content">
                 <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1', '_blank')">FTTH Online Users </button>
                 <button onclick="window.open('https://dash.elcld.net/d/e2ae3a51-0940-463c-964a-d38ab54f224d/04236846-084b-576a-a37a-26c3246998dc?orgId=1&refresh=5m&viewPanel=45', '_blank')">Monitor FTTH Zones </button>
@@ -185,7 +194,7 @@
             </div>
         </div>
         <div class="dropdown">
-            <button class="dropbtn">JW</button>
+            <button class="dropbtn" tabindex="0">JW</button>
             <div class="dropdown-content">
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_SiteDelivery/FTTH_SiteDeliveryView/_/inbox', '_blank')">ZONE DELIVERY #24 </button>
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/FTTH_ZoneUpgrade/FTTH_ZoneUpgradeView/_/inbox', '_blank')">ZONE UPGRADE #67 </button>
@@ -195,7 +204,7 @@
             </div>
         </div>
     </div>
-    <button id="logout-btn" class="logout-btn" style="display:none;">تسجيل الخروج</button>
+    <button id="logout-btn" class="logout-btn">تسجيل الخروج</button>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
         // ضع هنا بيانات مشروعك من supabase
@@ -208,6 +217,22 @@
         const mainContent = document.getElementById('main-content');
         const loginError = document.getElementById('login-error');
         const logoutBtn = document.getElementById('logout-btn');
+
+        // منطق dropdown لإبقاء القائمة مفتوحة عند المرور أو التركيز
+        document.querySelectorAll('.dropdown').forEach(function(drop){
+            const btn = drop.querySelector('.dropbtn');
+            btn.addEventListener('click', function(e){
+                e.stopPropagation();
+                document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
+                drop.classList.toggle('open');
+            });
+            drop.addEventListener('mouseleave', function(){
+                drop.classList.remove('open');
+            });
+        });
+        document.body.addEventListener('click', function(){
+            document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
+        });
 
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -222,7 +247,7 @@
                 } else {
                     loginBox.style.display = 'none';
                     mainContent.style.display = 'grid';
-                    logoutBtn.style.display = 'inline-block';
+                    logoutBtn.classList.add('show');
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
@@ -234,7 +259,7 @@
             await supabase.auth.signOut();
             mainContent.style.display = 'none';
             loginBox.style.display = 'flex';
-            logoutBtn.style.display = 'none';
+            logoutBtn.classList.remove('show');
             loginForm.reset();
         });
     </script>
