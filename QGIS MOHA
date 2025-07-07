@@ -1,1 +1,355 @@
 
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> QGIS MOHA</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: linear-gradient(135deg, #192d61 0%, #223a5e 100%); 
+            font-family: 'Cairo', Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.5rem;
+            color: #f5f6fa;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 40px auto 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #f5f6fa;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+        }
+        .login-box button:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            transform: translateY(-3px) scale(1.05);
+        }
+        .logout-btn {
+            position: fixed;
+            top: 18px;
+            right: 24px;
+            background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 7px 22px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255,88,88,0.10);
+            cursor: pointer;
+            z-index: 2000;
+            transition: background 0.3s, transform 0.2s;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+            display: none;
+        }
+        .logout-btn.show {
+            display: block;
+        }
+        .logout-btn:hover {
+            background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+            transform: scale(1.04) rotate(-2deg);
+        }
+        .map-container {
+            width: 600px;
+            height: 500px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+        #search-box {
+            width: 90%;
+            margin: 24px auto 10px auto;
+            display: flex;
+            gap: 8px;
+            z-index: 1001;
+        }
+        #coord-input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #bbb;
+            font-size: 1.1rem;
+        }
+        #search-btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        #map {
+            width: 95%;
+            height: 400px;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header"> QGIS MOHA </div>
+    <div class="login-box" id="login-box">
+        <h2>تسجيل الدخول</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="اسم المستخدم" required />
+            <input type="password" id="password" placeholder="كلمة المرور" required />
+            <button type="submit">دخول</button>
+            <div id="login-error" style="color:#ffb3b3; margin-top:10px;"></div>
+        </form>
+    </div>
+    <button id="logout-btn" class="logout-btn">تسجيل الخروج</button>
+    <div class="map-container" id="main-content" style="display:none;">
+        <form id="search-box" onsubmit="return false;">
+            <input id="coord-input" type="text" placeholder="ابحث عن إحداثيات (مثال: 33.3, 44.3 أو 33°18'54\"N, 44°21'58\"E)" />
+            <button id="search-btn">بحث</button>
+        </form>
+        <div style="width:95%; text-align:left; margin-bottom:10px;">
+            <button id="upload-layer-btn" style="background:linear-gradient(90deg,#43e97b 0%,#38f9d7 100%);color:#222;padding:7px 18px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">رفع طبقة GeoJSON</button>
+            <input type="file" id="layer-file" accept=".json,.geojson" style="display:none;" />
+        </div>
+        <div id="map"></div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // ربط نفس قاعدة بيانات Supabase الخاصة بصفحة index
+        const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const loginForm = document.getElementById('login-form');
+        const loginBox = document.getElementById('login-box');
+        const mainContent = document.getElementById('main-content');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            loginError.textContent = '';
+            try {
+                // تسجيل الدخول عبر supabase بنفس طريقة index
+                const { data, error } = await supabase.auth.signInWithPassword({ email: username, password });
+                if (error) {
+                    loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
+                } else {
+                    loginBox.style.display = 'none';
+                    mainContent.style.display = 'flex';
+                    logoutBtn.classList.add('show');
+                }
+            } catch (err) {
+                loginError.textContent = err.message || 'حدث خطأ غير متوقع.';
+            }
+        });
+        logoutBtn.addEventListener('click', async function() {
+            await supabase.auth.signOut();
+            mainContent.style.display = 'none';
+            loginBox.style.display = 'flex';
+            logoutBtn.classList.remove('show');
+            loginForm.reset();
+        });
+
+        // إنشاء الخريطة
+        var map = L.map('map').setView([33.3152, 44.3661], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        var marker;
+
+        // دالة لتحويل أي صيغة إحداثيات إلى [lat, lng]
+        function parseCoords(input) {
+            input = input.trim();
+            // إذا كانت الصيغة عشرية
+            var decimal = input.match(/^(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)/);
+            if (decimal) {
+                return [parseFloat(decimal[1]), parseFloat(decimal[2])];
+            }
+            // إذا كانت الصيغة درجات/دقائق/ثواني
+            var dms = input.match(/(\d{1,3})[°\s]+(\d{1,2})['\s]+(\d{1,2}(?:\.\d+)?)["\s]*([NS])?[,\s]+(\d{1,3})[°\s]+(\d{1,2})['\s]+(\d{1,2}(?:\.\d+)?)["\s]*([EW])?/i);
+            if (dms) {
+                function dmsToDec(d, m, s, hemi) {
+                    var dec = Number(d) + Number(m)/60 + Number(s)/3600;
+                    if (hemi && (hemi.toUpperCase() === 'S' || hemi.toUpperCase() === 'W')) dec *= -1;
+                    return dec;
+                }
+                var lat = dmsToDec(dms[1], dms[2], dms[3], dms[4]);
+                var lng = dmsToDec(dms[5], dms[6], dms[7], dms[8]);
+                return [lat, lng];
+            }
+            return null;
+        }
+
+        document.getElementById('search-btn').onclick = function() {
+            var val = document.getElementById('coord-input').value;
+            var coords = parseCoords(val);
+            if (coords) {
+                map.setView(coords, 14);
+                if (marker) marker.remove();
+                marker = L.marker(coords).addTo(map);
+            } else {
+                alert('صيغة الإحداثيات غير صحيحة!');
+            }
+        };
+
+        // رفع طبقة GeoJSON إلى Supabase
+        const uploadBtn = document.getElementById('upload-layer-btn');
+        const fileInput = document.getElementById('layer-file');
+        uploadBtn.onclick = function() {
+            fileInput.value = '';
+            fileInput.click();
+        };
+        fileInput.onchange = async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                let geojson;
+                try {
+                    geojson = JSON.parse(text);
+                } catch (err) {
+                    alert('ملف GeoJSON غير صالح!');
+                    return;
+                }
+                // استخراج النوع (type) من geojson
+                let type = geojson.type || (geojson.features && geojson.features[0] && geojson.features[0].geometry.type) || 'Unknown';
+                // اسم الطبقة من اسم الملف
+                let name = file.name.replace(/\.[^/.]+$/, "");
+                // رفع إلى Supabase
+                const { data, error } = await supabase.from('layers').insert([
+                    { name, type, geojson }
+                ]);
+                if (error) {
+                    alert('فشل رفع الطبقة: ' + error.message);
+                } else {
+                    alert('تم رفع الطبقة بنجاح!');
+                    await loadLayers();
+                }
+            } catch (err) {
+                alert('حدث خطأ أثناء رفع الطبقة!');
+            }
+        };
+
+        // دالة لجلب وعرض جميع الطبقات من Supabase
+        async function loadLayers() {
+            // حذف الطبقات القديمة من الخريطة (إن وجدت)
+            if (window._layerGroups) {
+                window._layerGroups.forEach(g => map.removeLayer(g));
+            }
+            window._layerGroups = [];
+            // جلب الطبقات
+            const { data, error } = await supabase.from('layers').select('*');
+            if (error) {
+                alert('فشل تحميل الطبقات: ' + error.message);
+                return;
+            }
+            data.forEach(layer => {
+                // عرض الطبقة على الخريطة
+                let color = '#3388ff';
+                if (layer.type === 'Polygon' || layer.type === 'MultiPolygon') color = '#43e97b';
+                if (layer.type === 'LineString' || layer.type === 'MultiLineString') color = '#f09819';
+                if (layer.type === 'Point' || layer.type === 'MultiPoint') color = '#ff5858';
+                let geoLayer = L.geoJSON(layer.geojson, {
+                    style: function(feature) {
+                        return {
+                            color: color,
+                            fillColor: color,
+                            fillOpacity: 0.3,
+                            weight: 3
+                        };
+                    },
+                    pointToLayer: function(feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 7,
+                            color: color,
+                            fillColor: color,
+                            fillOpacity: 0.8
+                        });
+                    },
+                    onEachFeature: function(feature, layerObj) {
+                        if (layer.name) {
+                            layerObj.bindPopup('الطبقة: ' + layer.name);
+                        }
+                    }
+                }).addTo(map);
+                window._layerGroups.push(geoLayer);
+            });
+        }
+        // تحميل الطبقات بعد تسجيل الدخول أو رفع طبقة جديدة
+        async function afterLogin() {
+            loginBox.style.display = 'none';
+            mainContent.style.display = 'flex';
+            logoutBtn.classList.add('show');
+            await loadLayers();
+        }
+        // استبدال أماكن إظهار الصفحة بعد تسجيل الدخول
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            loginError.textContent = '';
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email: username, password });
+                if (error) {
+                    loginError.textContent = error.message || 'بيانات الدخول غير صحيحة أو هناك مشكلة في الاتصال.';
+                } else {
+                    await afterLogin();
+                }
+            } catch (err) {
+                loginError.textContent = err.message || 'حدث خطأ غير متوقع.';
+            }
+        });
+    </script>
+</body>
+</html>
+
