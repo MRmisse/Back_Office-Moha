@@ -179,10 +179,43 @@
         </form>
     </div>
 
-
-
+<div id="feedback-templates" class="hidden container" style="margin-top:40px;">
+    <button class="button" onclick="hideFeedBackTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/templates1.txt', ' حل مشكلة الباور والقطع ')" style="display:none;">حل مشكلة الباور والقطع</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template3.txt', ' تجديد اشتراك ')" style="display:none;">تجديد اشتراك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template4.txt', 'تأجيل الصيانة ')" style="display:none;">تأجيل الصيانة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template5.txt', ' رفض الصيانه (الخدمة طبيعية) ')" style="display:none;">رفض الصيانه (الخدمة طبيعية)</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template20.txt', ' الزبون رفض الخدمة  ')" style="display:none;">الزبون رفض الخدمة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template6.txt', 'عدم الرد على الاتصال')" style="display:none;">عدم الرد على الاتصال</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template7.txt', 'ضعف الخدمة  ')" style="display:none;">ضعف الخدمة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template8.txt', 'اليوزر اوفلاين  ')" style="display:none;">اليوزر اوفلاين</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template9.txt', 'جكة المبيعات  ')" style="display:none;">جكة المبيعات</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template10.txt', 'لم يتم حل الاشكال   ')" style="display:none;">لم يتم حل الاشكال</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template11.txt', ' مشكلة في العامود  ')" style="display:none;">مشكلة في العامود</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template12.txt', ' شكرا على المتابعه ')" style="display:none;">شكرا على المتابعه</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template13.txt', ' تم الاتصال وطلب صيانه ')" style="display:none;">تم الاتصال وطلب صيانه</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template15.txt', ' مشكلة في الايام الاضافية ')" style="display:none;">مشكلة في الايام الاضافية</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template16.txt', '  تغيير سيريال بدون صورة  ')" style="display:none;">تغيير سيريال بدون صورة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template27.txt', ' تغيير سيريال 360  ')" style="display:none;">تغيير سيريال 360</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template17.txt', ' طلب الغاء ريكوست جديد ')" style="display:none;">طلب الغاء ريكوست جديد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template19.txt', ' لا يشمل عرض الجديد  ')" style="display:none;">لا يشمل عرض الجديد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template21.txt')" style="display:none;">يرجى ذكر معلومات الاشتراك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template22.txt')" style="display:none;">جار المتابعه في تكت</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template23.txt')" style="display:none;">مشكلة عدم ملئ معلومات البطاقة</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template24.txt')" style="display:none;">طلب تغيير زون لفيرجوال بيندنك</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template25.txt')" style="display:none;">طلب تغيير باسورد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template26.txt')" style="display:none;">تغيير باسورد بدون باسورد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template28.txt')" style="display:none;">طلب تغيير زون</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template29.txt')" style="display:none;">دعوة صديق اكث من 2</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template30.txt')" style="display:none;">طلب نقل اشتراك من قبل الوكيل</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template31.txt')" style="display:none;">تطبيق شاهد</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template32.txt')" style="display:none;">التجديد التلفائي</button>
+    <button class="button" onclick="fetchTemplateAndCopy('feedtemplates/template31.txt')" style="display:none;">test</button>
+    <button class="button" id="show-templates-btn" onclick="showTemplateButtons()" style="display:none;grid-column:1/-1;">عرض قوالب التغذية</button>
+</div>
     
-    <div class="container" id="main-content" style="display:none;">
+    <div class="container" id="main-buttons" style="display:none;">
+     <button class="button" onclick="showFeedBackTemplates()">Feed Back Templates</button>
         <button onclick="window.open('QGIS-MOHA.html', '_blank')">QGIS-MOHA</button>
         <button onclick="window.open('http://10.6.115.5:4750/login', '_blank')">tuuunel</button>
         <button onclick="window.open('https://192.168.219.126/zabbix.php?action=dashboard.view', '_blank')">ZABBIX</button>
@@ -208,7 +241,7 @@
                 <button onclick="window.open('https://jwdx.earthlink.iq/jw/web/userview/virtualZoneManagement/virtualZoneManagement/_/inbox', '_blank')">USERS #85</button>
             </div>
         </div>
-        <button onclick="window.open('feed-templates.html', '_blank')">Feed Templates</button>
+        <button onclick="showFeedBackTemplates()">Feed Templates</button>
     </div>
     <button id="logout-btn" class="logout-btn">Logout</button>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -223,6 +256,10 @@
         const mainContent = document.getElementById('main-content');
         const loginError = document.getElementById('login-error');
         const logoutBtn = document.getElementById('logout-btn');
+        const mainButtons = document.getElementById('main-buttons');
+        const feedbackTemplates = document.getElementById('feedback-templates');
+        const showTemplatesBtn = document.getElementById('show-templates-btn');
+        const backToMainBtn = document.querySelector("#feedback-templates button[onclick*='hideFeedBackTemplates']");
 
         // Dropdown logic: keep menu open when hovering over button or menu
         document.querySelectorAll('.dropdown').forEach(function(drop){
@@ -271,7 +308,10 @@
                     loginError.textContent = error.message || 'Invalid credentials or connection issue.';
                 } else {
                     loginBox.style.display = 'none';
-                    mainContent.style.display = 'grid';
+                    mainButtons.style.display = 'grid';
+                    feedbackTemplates.classList.add('hidden');
+                    if (showTemplatesBtn) showTemplatesBtn.style.display = 'block';
+                    if (backToMainBtn) backToMainBtn.style.display = 'block';
                     logoutBtn.classList.add('show');
                 }
             } catch (err) {
@@ -282,11 +322,38 @@
 
         logoutBtn.addEventListener('click', async function() {
             await supabase.auth.signOut();
-            mainContent.style.display = 'none';
+            mainButtons.style.display = 'none';
+            feedbackTemplates.classList.add('hidden');
+            if (showTemplatesBtn) showTemplatesBtn.style.display = 'none';
+            if (backToMainBtn) backToMainBtn.style.display = 'none';
             loginBox.style.display = 'flex';
             logoutBtn.classList.remove('show');
             loginForm.reset();
         });
+
+        function showFeedBackTemplates() {
+            document.getElementById('main-buttons').classList.add('hidden');
+            document.getElementById('feedback-templates').classList.remove('hidden');
+        }
+        function showTemplateButtons() {
+            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
+                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
+                    btn.style.display = 'block';
+                }
+            });
+            document.getElementById('show-templates-btn').style.display = 'none';
+        }
+        function hideFeedBackTemplates() {
+            document.getElementById('feedback-templates').classList.add('hidden');
+            document.getElementById('main-buttons').classList.remove('hidden');
+            // إخفاء الأزرار عند العودة
+            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
+                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
+                    btn.style.display = 'none';
+                }
+            });
+            document.getElementById('show-templates-btn').style.display = 'block';
+        }
     </script>
 </body>
 </html>
