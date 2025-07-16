@@ -208,6 +208,23 @@
             <div id="login-error" style="color:#ffb3b3; margin-top:10px;"></div>
         </form>
     </div>
+        </div>
+        <!-- قسم tabadul Template (extra-templates) -->
+        <div id="extra-templates" class="hidden container" style="margin-top:40px;">
+            <button class="button" onclick="hideExtraTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+            <button class="button" onclick="copyText(' تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة بدون استقطاع من الرصيد  يرجى اعادة المحاولة مرة اخرى وشكرا')" style="display:none;">No attempts left</button>
+            <button class="button" onclick="openInNewTab('https://epg-ui.tabadul.iq/epg_gui/#login')" style="display:none;">TABADUL</button>
+            <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">Do not honor transaction</button>
+            <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">Cannot process transaction</button>
+            <button class="button" onclick="copyText('تحية طيبة المحاولة في وقت اخر (15-30 دقيقة ) لم يتم استقطاع رصيد من الزبون / او مراجعة الجهة المصدرة للبطاقة وشكرا')" style="display:none;">Session time limit</button>
+            <button class="button" onclick="copyText('تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة يرجى اعادة المحاولة مره اخر لم يتم استقطاع رصيد من الزبون وفي حال الفشل مره اخرى يرجى مراجعة الجهة المصدرة للبطاقة وشكرا')" style="display:none;">3DS2 CReq cancelled</button>
+            <button class="button" onclick="copyText('تحية طيبة مشكلة في الانترنت يرجى اعادة المحاولة لاحقا وفي حال الفشل مرة اخرى يراجع الجهة المصدرة لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">processing.error</button>
+            <button class="button" onclick="copyText('تحية طيبة تم التجييك لا يوجد رصيد كافي في البطاقة وشكرا')" style="display:none;">Not enough money</button>
+            <button class="button" onclick="copyText('تحية طيبة تم التجييك يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">TDS_AUTH_FAILED</button>
+            <button class="button" onclick="copyText('تحية طيبة تجاوز الوقت المحدد للدخول عبر البوابة (10 دقائق) يرجى اعادة المحاولة مره اخرى لم يتم استقطاع رصيد من الزبون  وشكرا')" style="display:none;">Limit exceeded</button>
+            <button class="button" onclick="copyText('تحية طيبة يرجى استبدال بطاقة الدفع الالكترونية ( فيزا او ماستر كارد) وشكرا')" style="display:none;">Payment failed. Cann't connect to Payment Gate</button>
+            <button class="button" onclick="copyText('تحية طيبة تم التجييك كود otp (الرمز الذي يصل في رسالة) لم تتم كتابته بطريقة صحيحة او تم التاخير في كتابته فيرجى إعادة المحاولة مره أخرى لتتم عملية الدفع وشكرا')" style="display:none;">3DS2 authentication successful</button>
+        </div>
 
 <div id="feedback-templates" class="hidden container" style="margin-top:40px;">
     <button class="button" onclick="hideFeedBackTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
@@ -269,6 +286,7 @@
             <div class="dropdown-content">
                 <button onclick="showFeedBackTemplates()">FEED BACK NEW</button>
                 <button onclick="showCustomTemplates()">FEED BACK FATS</button>
+                <button onclick="showExtraTemplates()"> tabadul Template </button>
             </div>
         </div>
         <button onclick="window.open('QGIS-MOHA.html', '_blank')">QGIS-MOHA</button>
@@ -278,10 +296,6 @@
         <button onclick="window.open('https://sso.ftth.iq/auth/admin/master/console/#/realms/Customers/users', '_blank')">SSO FTTH</button>
         <button onclick="window.open('https://alwatani-requests.netlify.app/vacations.html', '_blank')">Vacation Calendar</button>
         <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
-        <button onclick="window.open('https://watani.support.tabadul.iq/en/support/home', '_blank')">.support tabadul</button>
-        <button onclick="window.open('https://epg-ui.tabadul.iq/epg_gui/#login', '_blank')">tabadul BPC</button>
-
-
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">Grafana</button>
             <div class="dropdown-content">
@@ -306,6 +320,29 @@
         <span style="font-size:1.5em;vertical-align:middle;">✔️</span> تم النسخ
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+    // دالة نسخ نص مباشر
+    function copyText(text) {
+        // الحصول على الزر الذي تم الضغط عليه
+        const active = document.activeElement;
+        navigator.clipboard.writeText(text);
+        // إظهار تأثير النسخ
+        const el = document.getElementById('copy-success');
+        if (el) {
+            el.classList.add('show');
+            setTimeout(()=>{el.classList.remove('show');}, 2000);
+        }
+        // إضافة كلاس copied للزر
+        if (active && active.classList && active.classList.contains('button')) {
+            active.classList.add('copied');
+            setTimeout(()=>active.classList.remove('copied'), 2000);
+        }
+    }
+    // دالة فتح رابط في تبويب جديد
+    function openInNewTab(url) {
+        window.open(url, '_blank');
+    }
+    </script>
     <script>
         // Place your Supabase project credentials here
         const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
@@ -447,6 +484,23 @@
             // إظهار الأزرار فقط داخل القسم
             document.querySelectorAll('#showFeedBackFATS .button').forEach(btn => {
                 btn.style.display = 'block';
+            });
+        }
+        // دوال إظهار/إخفاء الأزرار الإضافية
+        function showExtraTemplates() {
+            document.getElementById('main-buttons').classList.add('hidden');
+            document.getElementById('feedback-templates').classList.add('hidden');
+            document.getElementById('custom-templates').classList.add('hidden');
+            document.getElementById('extra-templates').classList.remove('hidden');
+            document.querySelectorAll('#extra-templates .button').forEach(btn => {
+                btn.style.display = 'block';
+            });
+        }
+        function hideExtraTemplates() {
+            document.getElementById('extra-templates').classList.add('hidden');
+            document.getElementById('main-buttons').classList.remove('hidden');
+            document.querySelectorAll('#extra-templates .button').forEach(btn => {
+                btn.style.display = 'none';
             });
         }
 
