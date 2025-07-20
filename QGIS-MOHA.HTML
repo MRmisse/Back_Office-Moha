@@ -315,8 +315,49 @@
       zoom: 17
     });
 
+
     // Add navigation controls
     map.addControl(new mapboxgl.NavigationControl());
+
+    // تحميل الطبقات المحفوظة من Supabase عند تحميل الصفحة
+    async function loadSavedLayers() {
+      const { data, error } = await supabase.from('layers').select('*');
+      if (error) {
+        console.error('خطأ في تحميل الطبقات:', error.message);
+        return;
+      }
+      if (data && Array.isArray(data)) {
+        data.forEach(layer => {
+          try {
+            // إذا كان geojson نص، نحوله إلى كائن
+            let geojson = layer.geojson;
+            if (typeof geojson === 'string') geojson = JSON.parse(geojson);
+            // إضافة الطبقة للخريطة
+            map.addSource(layer.name, {
+              type: 'geojson',
+              data: geojson
+            });
+            map.addLayer({
+              id: layer.name,
+              type: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? 'circle' : 'line',
+              source: layer.name,
+              paint: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? {
+                'circle-radius': 7,
+                'circle-color': '#FF5733'
+              } : {
+                'line-color': '#007BFF',
+                'line-width': 3
+              }
+            });
+          } catch (err) {
+            console.error('خطأ في إضافة طبقة محفوظة:', err);
+          }
+        });
+      }
+    }
+
+    // تحميل الطبقات عند تحميل الخريطة
+    map.on('load', loadSavedLayers);
 
     // Resize handle functionality
     const resizeHandle = document.querySelector('.resize-handle');
