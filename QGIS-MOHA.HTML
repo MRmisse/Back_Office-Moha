@@ -354,30 +354,53 @@
       document.removeEventListener('mouseup', stopResize);
     }
 
-    // Modal (Info) window handling
+
+    // Modal (Info) window handling (remove info-btn code since it doesn't exist)
     const infoModal = document.getElementById('info-modal');
-    const infoBtn = document.getElementById('info-btn');
     const closeBtn = document.querySelector('.close-btn');
     const infoText = document.getElementById('info-text');
 
-    infoBtn.addEventListener('click', () => {
-      fetch('qgisinfo.txt')
-        .then(response => response.text())
-        .then(data => {
-          infoText.innerHTML = data.replace(/\n/g, '<br>');
-          infoModal.style.display = 'block';
-        })
-        .catch(error => {
-          console.error('Error loading info text:', error);
-          infoText.innerHTML = 'Failed to load information.';
-          infoModal.style.display = 'block';
-        });
-    });
-
     closeBtn.addEventListener('click', () => infoModal.style.display = 'none');
-
     window.addEventListener('click', (event) => {
       if (event.target === infoModal) infoModal.style.display = 'none';
+    });
+
+    // زر Navigate: ينقل الخريطة للإحداثيات المدخلة
+    document.getElementById('navigate-btn').addEventListener('click', function() {
+      const coordInput = document.getElementById('coordinates').value.trim();
+      // توقع الصيغة: lat, lng أو lng, lat
+      let lat, lng;
+      if (/^[\d.\-]+,\s*[\d.\-]+$/.test(coordInput)) {
+        const parts = coordInput.split(',').map(s => s.trim());
+        // إذا كان lat في البداية (عادة)
+        if (Math.abs(Number(parts[0])) <= 90 && Math.abs(Number(parts[1])) <= 180) {
+          lat = Number(parts[0]);
+          lng = Number(parts[1]);
+        } else {
+          // إذا كان lng في البداية
+          lng = Number(parts[0]);
+          lat = Number(parts[1]);
+        }
+        if (!isNaN(lat) && !isNaN(lng)) {
+          map.flyTo({ center: [lng, lat], zoom: 17 });
+        } else {
+          alert('الرجاء إدخال إحداثيات صحيحة.');
+        }
+      } else {
+        alert('الرجاء إدخال الإحداثيات بالصيغة الصحيحة: 33.294526, 44.430290');
+      }
+    });
+
+    // زر Search FAT: يبحث عن FAT ويعرض رسالة (يمكنك تطويره لاحقاً)
+    document.getElementById('search-btn').addEventListener('click', function() {
+      const searchVal = document.getElementById('fat-search').value.trim();
+      if (!searchVal) {
+        alert('يرجى إدخال Zone_ID و FAT# للبحث.');
+        return;
+      }
+      // مثال: Z12 FAT123
+      // يمكنك هنا تنفيذ البحث في قاعدة بيانات أو طبقات الخريطة
+      alert('تم البحث عن: ' + searchVal + '\n(يمكنك تطوير البحث لاحقاً)');
     });
 
     // Right-click event to show coordinates and copy them
