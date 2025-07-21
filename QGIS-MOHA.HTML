@@ -332,8 +332,25 @@
         type: 'line',
         source: 'layer1',
         paint: {
-          'line-color': '#FF5733',
+          'line-color': '#009688',
           'line-width': 3
+        }
+      });
+      // اسم fat_id لكل خط في الطبقة 1
+      map.addLayer({
+        id: 'layer1-label',
+        type: 'symbol',
+        source: 'layer1',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
         }
       });
       // layer2
@@ -346,8 +363,25 @@
         type: 'line',
         source: 'layer2',
         paint: {
-          'line-color': '#007BFF',
+          'line-color': '#009688',
           'line-width': 3
+        }
+      });
+      // اسم fat_id لكل خط في الطبقة 2
+      map.addLayer({
+        id: 'layer2-label',
+        type: 'symbol',
+        source: 'layer2',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
         }
       });
       // layer3
@@ -360,8 +394,25 @@
         type: 'line',
         source: 'layer3',
         paint: {
-          'line-color': '#43cea2',
+          'line-color': '#009688',
           'line-width': 3
+        }
+      });
+      // اسم fat_id لكل خط في الطبقة 3
+      map.addLayer({
+        id: 'layer3-label',
+        type: 'symbol',
+        source: 'layer3',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
         }
       });
 
@@ -371,12 +422,39 @@
         data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
       });
       map.addLayer({
-        id: 'zoneLayer',
+        id: 'zoneLayer-fill',
+        type: 'fill',
+        source: 'zoneLayer',
+        paint: {
+          'fill-color': '#4CAF50', // لون ذهبي
+          'fill-opacity': 0.4
+        }
+      });
+      // إضافة حدود للمناطق أيضاً
+      map.addLayer({
+        id: 'zoneLayer-outline',
         type: 'line',
         source: 'zoneLayer',
         paint: {
-          'line-color': '#FFD700', // لون ذهبي للتمييز
-          'line-width': 4
+          'line-color': '#FFD700',
+          'line-width': 2
+        }
+      });
+      // إضافة طبقة أسماء المناطق (label)
+      map.addLayer({
+        id: 'zoneLayer-label',
+        type: 'symbol',
+        source: 'zoneLayer',
+        layout: {
+          'text-field': ['get', 'zone_id'], // تم التغيير ليستخدم zone_id
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 16,
+          'text-anchor': 'center'
+        },
+        paint: {
+          'text-color': '#FFD700',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
         }
       });
     });
@@ -474,17 +552,62 @@
       let lat, lng;
       if (/^[\d.\-]+,\s*[\d.\-]+$/.test(coordInput)) {
         const parts = coordInput.split(',').map(s => s.trim());
-        // إذا كان lat في البداية (عادة)
         if (Math.abs(Number(parts[0])) <= 90 && Math.abs(Number(parts[1])) <= 180) {
           lat = Number(parts[0]);
           lng = Number(parts[1]);
         } else {
-          // إذا كان lng في البداية
           lng = Number(parts[0]);
           lat = Number(parts[1]);
         }
         if (!isNaN(lat) && !isNaN(lng)) {
           map.flyTo({ center: [lng, lat], zoom: 17 });
+      // البحث عن أقرب خط من الطبقات الثلاث
+      let foundInfo = null;
+      const sources = ['layer1', 'layer2', 'layer3'];
+      for (let src of sources) {
+        const source = map.getSource(src);
+        if (source && source._data && source._data.features) {
+          for (let feature of source._data.features) {
+            if (feature.geometry.type === 'LineString') {
+              const pt = turf.point([lng, lat]);
+              const line = turf.lineString(feature.geometry.coordinates);
+              const dist = turf.pointToLineDistance(pt, line, { units: 'meters' });
+              if (dist < 20) {
+                foundInfo = {
+                  layer: src,
+                  fat_id: feature.properties.fat_id,
+                  zone_id: feature.properties.zone_id
+                };
+                break;
+              }
+            }
+          }
+        }
+        if (foundInfo) break;
+      }
+      // إضافة دنبوس مع نافذة معلومات
+      if (window.searchMarker) {
+        window.searchMarker.remove();
+      }
+      let infoHtml = `<div style='color:black;'>`;
+      if (foundInfo && (foundInfo.fat_id || foundInfo.zone_id)) {
+        if (foundInfo.fat_id) {
+          infoHtml += `<strong>fat_id:</strong> ${foundInfo.fat_id}<br>`;
+        }
+        if (foundInfo.zone_id) {
+          infoHtml += `<strong>zone_id:</strong> ${foundInfo.zone_id}<br>`;
+        }
+        infoHtml += `<strong>اسم الطبقة:</strong> ${foundInfo.layer}<br>`;
+      } else {
+        infoHtml += `<strong> Location :</strong> ${lat}, ${lng}`;
+      }
+      infoHtml += `</div>`;
+      window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
+        .setLngLat([lng, lat])
+        .setPopup(new mapboxgl.Popup({ offset: 25 })
+          .setHTML(infoHtml))
+        .addTo(map);
+      window.searchMarker.getPopup().addTo(map);
         } else {
           alert('الرجاء إدخال إحداثيات صحيحة.');
         }
