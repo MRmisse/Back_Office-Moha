@@ -316,8 +316,55 @@
     });
 
 
+
     // Add navigation controls
     map.addControl(new mapboxgl.NavigationControl());
+
+    // --- إضافة طبقات GeoJSON الخارجية مباشرة عند تحميل الخريطة ---
+    map.on('load', function() {
+      // layer1
+      map.addSource('layer1', {
+        type: 'geojson',
+        data: 'https://.../fatreg_part1.geojson'
+      });
+      map.addLayer({
+        id: 'layer1',
+        type: 'line',
+        source: 'layer1',
+        paint: {
+          'line-color': '#FF5733',
+          'line-width': 3
+        }
+      });
+      // layer2
+      map.addSource('layer2', {
+        type: 'geojson',
+        data: 'https://.../fatreg_part2.geojson'
+      });
+      map.addLayer({
+        id: 'layer2',
+        type: 'line',
+        source: 'layer2',
+        paint: {
+          'line-color': '#007BFF',
+          'line-width': 3
+        }
+      });
+      // layer3
+      map.addSource('layer3', {
+        type: 'geojson',
+        data: 'https://.../fatreg_part3.geojson'
+      });
+      map.addLayer({
+        id: 'layer3',
+        type: 'line',
+        source: 'layer3',
+        paint: {
+          'line-color': '#43cea2',
+          'line-width': 3
+        }
+      });
+    });
 
     // تحميل الطبقات المحفوظة من Supabase عند تحميل الصفحة
     async function loadSavedLayers() {
