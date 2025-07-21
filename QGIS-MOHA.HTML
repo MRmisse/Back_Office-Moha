@@ -325,7 +325,7 @@
       // layer1
       map.addSource('layer1', {
         type: 'geojson',
-        data: 'https://.../fatreg_part1.geojson'
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson'
       });
       map.addLayer({
         id: 'layer1',
@@ -339,7 +339,7 @@
       // layer2
       map.addSource('layer2', {
         type: 'geojson',
-        data: 'https://.../fatreg_part2.geojson'
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson'
       });
       map.addLayer({
         id: 'layer2',
@@ -353,7 +353,7 @@
       // layer3
       map.addSource('layer3', {
         type: 'geojson',
-        data: 'https://.../fatreg_part3.geojson'
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
       });
       map.addLayer({
         id: 'layer3',
@@ -362,6 +362,21 @@
         paint: {
           'line-color': '#43cea2',
           'line-width': 3
+        }
+      });
+
+      // إضافة طبقة zonename.geojson
+      map.addSource('zoneLayer', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
+      });
+      map.addLayer({
+        id: 'zoneLayer',
+        type: 'line',
+        source: 'zoneLayer',
+        paint: {
+          'line-color': '#FFD700', // لون ذهبي للتمييز
+          'line-width': 4
         }
       });
     });
