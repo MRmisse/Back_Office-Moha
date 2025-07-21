@@ -413,6 +413,100 @@
           'text-halo-width': 2
         }
       });
+      // الطبقات الجديدة باللون الأحمر
+      map.addSource('fats_part1', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson'
+      });
+      map.addLayer({
+        id: 'fats_part1',
+        type: 'circle',
+        source: 'fats_part1',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#FF0000',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part1-label',
+        type: 'symbol',
+        source: 'fats_part1',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#FF0000',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2
+        }
+      });
+      map.addSource('fats_part2', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part2%20(1).geojson'
+      });
+      map.addLayer({
+        id: 'fats_part2',
+        type: 'circle',
+        source: 'fats_part2',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#FF0000',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part2-label',
+        type: 'symbol',
+        source: 'fats_part2',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#FF0000',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2
+        }
+      });
+      map.addSource('fats_part3', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part3.geojson'
+      });
+      map.addLayer({
+        id: 'fats_part3',
+        type: 'circle',
+        source: 'fats_part3',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#FF0000',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part3-label',
+        type: 'symbol',
+        source: 'fats_part3',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#FF0000',
+          'text-halo-color': '#fff',
+          'text-halo-width': 2
+        }
+      });
 
       // إضافة طبقة zonename.geojson
       map.addSource('zoneLayer', {
@@ -424,7 +518,7 @@
         type: 'fill',
         source: 'zoneLayer',
         paint: {
-          'fill-color': '#4CAF50', // لون ذهبي
+          'fill-color': '#6eff87', // لون ذهبي
           'fill-opacity': 0.4
         }
       });
@@ -434,7 +528,7 @@
         type: 'line',
         source: 'zoneLayer',
         paint: {
-          'line-color': '#FFD700',
+          'line-color': '#4CAF50',
           'line-width': 2
         }
       });
@@ -451,7 +545,7 @@
         },
         paint: {
           'text-color': '#FFD700',
-          'text-halo-color': '#232526',
+          'text-halo-color': '#4CAF50',
           'text-halo-width': 2
         }
       });
