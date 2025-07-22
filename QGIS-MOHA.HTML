@@ -809,6 +809,7 @@
           loginScreen.style.display = 'none';
           headerWrapper.style.display = '';
           mainContainer.style.display = '';
+          setTimeout(() => { map.resize(); }, 100); // Fix map size after showing container
         } else {
           loginError.textContent = 'Incorrect email or password.';
           loginError.style.display = 'block';
