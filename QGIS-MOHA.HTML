@@ -264,14 +264,25 @@
 <!-- Add Supabase Library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <body>
-  <div class="header-wrapper">
+  <!-- Login Screen -->
+  <div id="login-screen" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(34,40,49,0.97);z-index:2000;display:flex;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:40px 32px;border-radius:18px;box-shadow:0 8px 32px 0 rgba(44,83,100,0.18);width:350px;text-align:center;">
+      <h2 style="color:#185a9d;margin-bottom:18px;">Login</h2>
+      <input id="login-username" type="text" placeholder="Username or Email" style="width:90%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:1.1rem;" />
+      <input id="login-password" type="password" placeholder="Password" style="width:90%;margin-bottom:18px;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:1.1rem;" />
+      <button id="login-btn" style="width:95%;padding:12px;background:linear-gradient(90deg,#43cea2,#185a9d);color:#fff;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer;">Login</button>
+      <div id="login-error" style="color:#d32f2f;margin-top:14px;font-size:1rem;display:none;"></div>
+    </div>
+  </div>
+
+  <div class="header-wrapper" style="display:none;">
     <div class="header">
       Alwatani Back Office
       <button class="home-button" onclick="window.location.replace('index.html')">Home</button>
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" style="display:none;">
     <h1>Mini QGIS</h1>
     <p>Enter coordinates to explore any location on the map.</p>
 
@@ -318,7 +329,7 @@
     // Add navigation controls
     map.addControl(new mapboxgl.NavigationControl());
 
-    // --- إضافة طبقات GeoJSON الخارجية مباشرة عند تحميل الخريطة ---
+    // --- Add external GeoJSON layers directly when the map loads ---
     map.on('load', function() {
       // layer1
       map.addSource('layer1', {
@@ -334,7 +345,7 @@
           'line-width': 3
         }
       });
-      // اسم fat_id لكل خط في الطبقة 1
+      // fat_id label for each line in layer 1
       map.addLayer({
         id: 'layer1-label',
         type: 'symbol',
@@ -365,7 +376,7 @@
           'line-width': 3
         }
       });
-      // اسم fat_id لكل خط في الطبقة 2
+      // fat_id label for each line in layer 2
       map.addLayer({
         id: 'layer2-label',
         type: 'symbol',
@@ -396,7 +407,7 @@
           'line-width': 3
         }
       });
-      // اسم fat_id لكل خط في الطبقة 3
+      // fat_id label for each line in layer 3
       map.addLayer({
         id: 'layer3-label',
         type: 'symbol',
@@ -413,7 +424,7 @@
           'text-halo-width': 2
         }
       });
-      // الطبقات الجديدة باللون الأحمر
+      // New layers in orange color
       map.addSource('fats_part1', {
         type: 'geojson',
         data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson'
@@ -508,7 +519,7 @@
         }
       });
 
-      // إضافة طبقة zonename.geojson
+      // Add zonename.geojson layer
       map.addSource('zoneLayer', {
         type: 'geojson',
         data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
@@ -522,7 +533,7 @@
           'fill-opacity': 0.4
         }
       });
-      // إضافة حدود للمناطق أيضاً
+      // Add zone boundaries
       map.addLayer({
         id: 'zoneLayer-outline',
         type: 'line',
@@ -532,13 +543,13 @@
           'line-width': 2
         }
       });
-      // إضافة طبقة أسماء المناطق (label)
+      // Add zone name label layer
       map.addLayer({
         id: 'zoneLayer-label',
         type: 'symbol',
         source: 'zoneLayer',
         layout: {
-          'text-field': ['get', 'zone_id'], // تم التغيير ليستخدم zone_id
+          'text-field': ['get', 'zone_id'], // changed to use zone_id
           'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 16,
           'text-anchor': 'center'
@@ -551,7 +562,7 @@
       });
     });
 
-    // تحميل الطبقات المحفوظة من Supabase عند تحميل الصفحة
+    // Load saved layers from Supabase when the page loads
     async function loadSavedLayers() {
       const { data, error } = await supabase.from('layers').select('*');
       if (error) {
@@ -561,10 +572,10 @@
       if (data && Array.isArray(data)) {
         data.forEach(layer => {
           try {
-            // إذا كان geojson نص، نحوله إلى كائن
+            // If geojson is a string, parse it to object
             let geojson = layer.geojson;
             if (typeof geojson === 'string') geojson = JSON.parse(geojson);
-            // إضافة الطبقة للخريطة
+            // Add layer to map
             map.addSource(layer.name, {
               type: 'geojson',
               data: geojson
@@ -582,13 +593,13 @@
               }
             });
           } catch (err) {
-            console.error('خطأ في إضافة طبقة محفوظة:', err);
+            console.error('Error adding saved layer:', err);
           }
         });
       }
     }
 
-    // تحميل الطبقات عند تحميل الخريطة
+    // Load layers when map loads
     map.on('load', loadSavedLayers);
 
     // Resize handle functionality
@@ -637,10 +648,10 @@
       if (event.target === infoModal) infoModal.style.display = 'none';
     });
 
-    // زر Navigate: ينقل الخريطة للإحداثيات المدخلة
+    // Navigate button: moves map to entered coordinates
     document.getElementById('navigate-btn').addEventListener('click', function() {
       const coordInput = document.getElementById('coordinates').value.trim();
-      // توقع الصيغة: lat, lng أو lng, lat
+      // Expect format: lat, lng or lng, lat
       let lat, lng;
       if (/^[\d.\-]+,\s*[\d.\-]+$/.test(coordInput)) {
         const parts = coordInput.split(',').map(s => s.trim());
@@ -653,7 +664,7 @@
         }
         if (!isNaN(lat) && !isNaN(lng)) {
           map.flyTo({ center: [lng, lat], zoom: 17 });
-      // البحث عن أقرب خط من الطبقات الثلاث
+      // Search for nearest line from the three layers
       let foundInfo = null;
       const sources = ['layer1', 'layer2', 'layer3'];
       for (let src of sources) {
@@ -677,7 +688,7 @@
         }
         if (foundInfo) break;
       }
-      // إضافة دنبوس مع نافذة معلومات
+      // Add marker with info window
       if (window.searchMarker) {
         window.searchMarker.remove();
       }
@@ -689,9 +700,9 @@
         if (foundInfo.zone_id) {
           infoHtml += `<strong>zone_id:</strong> ${foundInfo.zone_id}<br>`;
         }
-        infoHtml += `<strong>اسم الطبقة:</strong> ${foundInfo.layer}<br>`;
+        infoHtml += `<strong>Layer Name:</strong> ${foundInfo.layer}<br>`;
       } else {
-        infoHtml += `<strong> Location :</strong> ${lat}, ${lng}`;
+        infoHtml += `<strong>Location:</strong> ${lat}, ${lng}`;
       }
       infoHtml += `</div>`;
       window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
@@ -701,23 +712,23 @@
         .addTo(map);
       window.searchMarker.getPopup().addTo(map);
         } else {
-          alert('الرجاء إدخال إحداثيات صحيحة.');
+          alert('Please enter valid coordinates.');
         }
       } else {
-        alert('الرجاء إدخال الإحداثيات بالصيغة الصحيحة: 33.294526, 44.430290');
+        alert('Please enter coordinates in the correct format: 33.294526, 44.430290');
       }
     });
 
-    // زر Search FAT: يبحث عن FAT ويعرض رسالة (يمكنك تطويره لاحقاً)
+    // Search FAT button: searches for FAT and shows a message (can be improved later)
     document.getElementById('search-btn').addEventListener('click', function() {
       const searchVal = document.getElementById('fat-search').value.trim();
       if (!searchVal) {
-        alert('يرجى إدخال Zone_ID و FAT# للبحث.');
+        alert('Please enter Zone_ID and FAT# to search.');
         return;
       }
-      // مثال: Z12 FAT123
-      // يمكنك هنا تنفيذ البحث في قاعدة بيانات أو طبقات الخريطة
-      alert('تم البحث عن: ' + searchVal + '\n(يمكنك تطوير البحث لاحقاً)');
+      // Example: Z12 FAT123
+      // You can implement search in database or map layers here
+      alert('Searched for: ' + searchVal + '\n(You can improve the search later)');
     });
 
     // Right-click event to show coordinates and copy them
@@ -755,16 +766,59 @@
       currentCoordsPopup.on('close', () => currentCoordsPopup = null);
     });
 
-    // --- إضافة زر تحميل طبقة GeoJSON وحفظها في Supabase ---
+    // --- Add button to upload GeoJSON layer and save it in Supabase ---
     const geojsonInput = document.getElementById('geojson-input');
     const addLayerBtn = document.getElementById('add-layer-btn');
     const saveLayersBtn = document.getElementById('save-layers-btn');
     let loadedLayers = [];
 
-    // Supabase إعداد الاتصال
-    const supabaseUrl = 'https://hkzfxpqjrwyxetsjdjor.supabase.co'; // ضع رابط مشروع supabase هنا
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw'; // ضع المفتاح هنا
+    // Supabase connection setup
+    const supabaseUrl = 'https://hkzfxpqjrwyxetsjdjor.supabase.co'; // Put your Supabase project URL here
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw'; // Put your Supabase key here
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Login screen
+    const loginScreen = document.getElementById('login-screen');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+    const loginUsername = document.getElementById('login-username');
+    const loginPassword = document.getElementById('login-password');
+    const headerWrapper = document.querySelector('.header-wrapper');
+    const mainContainer = document.querySelector('.container');
+
+    loginBtn.addEventListener('click', async () => {
+      const email = loginUsername.value.trim();
+      const password = loginPassword.value;
+      loginError.style.display = 'none';
+      if (!email || !password) {
+        loginError.textContent = 'Please enter email and password.';
+        loginError.style.display = 'block';
+        return;
+      }
+      // Login via Supabase Auth
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          loginError.textContent = 'Login error: ' + error.message;
+          loginError.style.display = 'block';
+          console.error('Supabase Auth error:', error);
+          return;
+        }
+        if (data && data.user) {
+          // Successful login
+          loginScreen.style.display = 'none';
+          headerWrapper.style.display = '';
+          mainContainer.style.display = '';
+        } else {
+          loginError.textContent = 'Incorrect email or password.';
+          loginError.style.display = 'block';
+        }
+      } catch (err) {
+        loginError.textContent = 'Failed to connect to authentication service (see console for details).';
+        loginError.style.display = 'block';
+        console.error('Auth connection error:', err);
+      }
+    });
 
     addLayerBtn.addEventListener('click', () => {
       geojsonInput.value = '';
@@ -797,9 +851,9 @@
             }
           });
           loadedLayers.push({ id: layerId, data: geojson });
-          alert('تمت إضافة الطبقة بنجاح!');
+          alert('Layer added successfully!');
         } catch (err) {
-          alert('ملف GeoJSON غير صالح!');
+          alert('Invalid GeoJSON file!');
         }
       };
       reader.readAsText(file);
@@ -807,7 +861,7 @@
 
     saveLayersBtn.addEventListener('click', async () => {
       if (loadedLayers.length === 0) {
-        alert('لا توجد طبقات لحفظها!');
+        alert('No layers to save!');
         return;
       }
       for (const layer of loadedLayers) {
@@ -816,11 +870,11 @@
           { name: layer.id, geojson: layer.data }
         ]);
         if (error) {
-          alert('خطأ في حفظ الطبقة: ' + error.message);
+          alert('Error saving layer: ' + error.message);
           return;
         }
       }
-      alert('تم حفظ جميع الطبقات في قاعدة البيانات!');
+      alert('All layers saved to the database!');
       loadedLayers = [];
     });
   </script>
