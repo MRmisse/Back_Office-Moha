@@ -1,1 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/umd/supabase.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini QGIS</title>
 
+  <!-- Mapbox GL JS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+
+  <style>
+    /* --- Modern QGIS UI --- */
+    body {
+      font-family: 'Cairo', 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #f3f6fa;
+      display: block;
+    }
+
+    .header-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: transparent;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .header {
+      position: relative;
+      background: linear-gradient(90deg, #0f2027, #2c5364 80%);
+      padding: 24px 0 24px 0;
+      text-align: center;
+      font-size: 2.1rem;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 0 0 32px 32px;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 24px 0 rgba(44,83,100,0.18);
+    }
+
+    .home-button {
+      position: absolute;
+      top: 16px;
+      left: 32px;
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(44,83,100,0.12);
+    }
+    .home-button:hover {
+      background: linear-gradient(90deg, #185a9d, #43cea2);
+      color: #fff;
+      transform: scale(1.08);
+    }
+
+    .container {
+      max-width: 950px;
+      width: 90vw;
+      margin: 110px auto 40px auto;
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+      background: rgba(34, 40, 49, 0.92);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px 0 rgba(44,83,100,0.18);
+      transition: all 0.3s;
+      backdrop-filter: blur(2px);
+    }
+    .container h1 {
+      font-size: 2.3rem;
+      color: #43cea2;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .container p {
+      font-size: 1.1rem;
+      color: #b2becd;
+      margin-bottom: 18px;
+    }
+
+    .input-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .input-section input {
+      padding: 13px 16px;
+      font-size: 1.05rem;
+      border: 2px solid #232526;
+      background: rgba(44, 62, 80, 0.85);
+      color: #fff;
+      border-radius: 10px;
+      width: 270px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(44,83,100,0.08);
+    }
+    .input-section input:focus {
+      border-color: #43cea2;
+      box-shadow: 0 0 0 2px #43cea233;
+    }
+    .input-section button {
+      padding: 13px 22px;
+      font-size: 1.05rem;
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(44,83,100,0.10);
+    }
+    .input-section button:hover {
+      background: linear-gradient(90deg, #185a9d, #43cea2);
+      transform: scale(1.07);
+    }
+    
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1002;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: auto;
+      background: rgba(34, 40, 49, 0.7);
+      backdrop-filter: blur(2px);
+    }
+    .modal-content {
+      background: #f3f6fa;
+      margin: 7% auto;
+      padding: 32px 24px;
+      border-radius: 18px;
+      width: 60%;
+      max-width: 700px;
+      box-shadow: 0 8px 32px 0 rgba(44,83,100,0.18);
+      color: #232526;
+    }
+    .close-btn {
+      color: #888;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-btn:hover {
+      color: #185a9d;
+    }
+   
+    #map {
+      height: 420px;
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(44,83,100,0.18);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #232526;
+    }
+    .resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      cursor: se-resize;
+      z-index: 1000;
+      border-radius: 7px 0 0 0;
+      box-shadow: 0 2px 8px rgba(44,83,100,0.10);
+    }
+
+    #sidebar {
+      position: fixed;
+      top: 120px;
+      right: 0;
+      width: 260px;
+      height: calc(100% - 140px);
+      background: rgba(44, 62, 80, 0.97);
+      color: #f3f6fa;
+      padding: 18px 12px 12px 12px;
+      box-shadow: -2px 0 12px rgba(44,83,100,0.10);
+      overflow-y: auto;
+      z-index: 1000;
+      border-radius: 18px 0 0 18px;
+    }
+    #sidebar h3 {
+      margin-top: 0;
+      color: #43cea2;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+    #sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    #sidebar ul li {
+      cursor: pointer;
+      padding: 7px 10px;
+      margin: 7px 0;
+      background: linear-gradient(90deg, #232526 60%, #414345 100%);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    #sidebar ul li:hover {
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      color: #fff;
+    }
+
+    .zone-label, .pole-label {
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(90deg, #185a9d, #43cea2);
+      padding: 5px 14px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 50px;
+      box-shadow: 0 2px 8px rgba(44,83,100,0.10);
+    }
+
+    .mapboxgl-ctrl-attrib {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: auto;
+      width: 230px;
+      text-align: left;
+      z-index: 1001;
+      background: rgba(44, 62, 80, 0.7);
+      padding: 7px;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<!-- Add Supabase Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(34,40,49,0.97);z-index:2000;display:flex;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:40px 32px;border-radius:18px;box-shadow:0 8px 32px 0 rgba(44,83,100,0.18);width:350px;text-align:center;">
+      <h2 style="color:#185a9d;margin-bottom:18px;">Login</h2>
+      <input id="login-username" type="text" placeholder="Username or Email" style="width:90%;margin-bottom:12px;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:1.1rem;" />
+      <input id="login-password" type="password" placeholder="Password" style="width:90%;margin-bottom:18px;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:1.1rem;" />
+      <button id="login-btn" style="width:95%;padding:12px;background:linear-gradient(90deg,#43cea2,#185a9d);color:#fff;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer;">Login</button>
+      <div id="login-error" style="color:#d32f2f;margin-top:14px;font-size:1rem;display:none;"></div>
+    </div>
+  </div>
+
+  <div class="header-wrapper" style="display:none;">
+    <div class="header">
+      Alwatani Back Office
+      <button class="home-button" onclick="window.location.replace('index.html')">Home</button>
+    </div>
+  </div>
+
+  <div class="container" style="display:none;">
+    <h1>Mini QGIS</h1>
+    <p>Enter coordinates to explore any location on the map.</p>
+
+    <div class="input-section">
+      <input type="text" id="coordinates" placeholder="Enter coordinates (e.g., 33.294526, 44.430290)" />
+      <button id="navigate-btn" type="button">Navigate</button>
+      <input type="text" id="fat-search" placeholder="Enter Zone_ID and FAT# (e.g., Z12 FAT123)" />
+      <button id="search-btn" type="button">Search FAT</button>
+      <input type="file" id="geojson-input" accept=".json,.geojson" style="display:none" />
+    </div>
+
+    <!-- Modal for Info -->
+    <div id="info-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="info-text"></div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- Sidebar for displaying pole numbers -->
+  <div id="sidebar" style="display: none;">
+    <h3>FATs in Zone</h3>
+    <ul id="pole-list"></ul>
+  </div>
+
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+  <script>
+    // Initialize Mapbox map
+    mapboxgl.accessToken = 'pk.eyJ1IjoibXVydGFkYXppeWFkIiwiYSI6ImNtN3pqM2l4bTAwdXkycXM1cWRkOWU1M3MifQ.fQFYTdArAWSPr7xF2jOvKw';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [44.43021532030931, 33.29456720199863],
+      zoom: 17
+    });
+
+
+
+    // Add navigation controls
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // --- Add external GeoJSON layers directly when the map loads ---
+    map.on('load', function() {
+      // layer1
+      map.addSource('layer1', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson'
+      });
+      map.addLayer({
+        id: 'layer1',
+        type: 'line',
+        source: 'layer1',
+        paint: {
+          'line-color': '#43cea2',
+          'line-width': 3
+        }
+      });
+      // fat_id label for each line in layer 1
+      map.addLayer({
+        id: 'layer1-label',
+        type: 'symbol',
+        source: 'layer1',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
+        }
+      });
+      // layer2
+      map.addSource('layer2', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson'
+      });
+      map.addLayer({
+        id: 'layer2',
+        type: 'line',
+        source: 'layer2',
+        paint: {
+          'line-color': '#43cea2',
+          'line-width': 3
+        }
+      });
+      // fat_id label for each line in layer 2
+      map.addLayer({
+        id: 'layer2-label',
+        type: 'symbol',
+        source: 'layer2',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
+        }
+      });
+      // layer3
+      map.addSource('layer3', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
+      });
+      map.addLayer({
+        id: 'layer3',
+        type: 'line',
+        source: 'layer3',
+        paint: {
+          'line-color': '#43cea2',
+          'line-width': 3
+        }
+      });
+      // fat_id label for each line in layer 3
+      map.addLayer({
+        id: 'layer3-label',
+        type: 'symbol',
+        source: 'layer3',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'symbol-placement': 'line',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14
+        },
+        paint: {
+          'text-color': '#009688',
+          'text-halo-color': '#232526',
+          'text-halo-width': 2
+        }
+      });
+      // New layers in orange color
+      map.addSource('fats_part1', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson'
+      });
+      map.addLayer({
+        id: 'fats_part1',
+        type: 'circle',
+        source: 'fats_part1',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#ff9800',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part1-label',
+        type: 'symbol',
+        source: 'fats_part1',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 2
+        }
+      });
+      map.addSource('fats_part2', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part2%20(1).geojson'
+      });
+      map.addLayer({
+        id: 'fats_part2',
+        type: 'circle',
+        source: 'fats_part2',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#ff9800',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part2-label',
+        type: 'symbol',
+        source: 'fats_part2',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 2
+        }
+      });
+      map.addSource('fats_part3', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part3.geojson'
+      });
+      map.addLayer({
+        id: 'fats_part3',
+        type: 'circle',
+        source: 'fats_part3',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#ff9800',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+      map.addLayer({
+        id: 'fats_part3-label',
+        type: 'symbol',
+        source: 'fats_part3',
+        layout: {
+          'text-field': ['get', 'fat_id'],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 14,
+          'text-offset': [0, 1.2]
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 2
+        }
+      });
+
+      // Add zonename.geojson layer
+      map.addSource('zoneLayer', {
+        type: 'geojson',
+        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
+      });
+      map.addLayer({
+        id: 'zoneLayer-fill',
+        type: 'fill',
+        source: 'zoneLayer',
+        paint: {
+          'fill-color': '#ffd54f', // لون ذهبي
+          'fill-opacity': 0.4
+        }
+      });
+      // Add zone boundaries
+      map.addLayer({
+        id: 'zoneLayer-outline',
+        type: 'line',
+        source: 'zoneLayer',
+        paint: {
+          'line-color': '#ff6f00',
+          'line-width': 2
+        }
+      });
+      // Add zone name label layer
+      map.addLayer({
+        id: 'zoneLayer-label',
+        type: 'symbol',
+        source: 'zoneLayer',
+        layout: {
+          'text-field': ['get', 'zone_id'], // changed to use zone_id
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 16,
+          'text-anchor': 'center'
+        },
+        paint: {
+          'text-color': '#fffde7',
+          'text-halo-color': '#4CAF50',
+          'text-halo-width': 2
+        }
+      });
+    });
+
+    // Load saved layers from Supabase when the page loads
+    async function loadSavedLayers() {
+      const { data, error } = await supabase.from('layers').select('*');
+      if (error) {
+        console.error('خطأ في تحميل الطبقات:', error.message);
+        return;
+      }
+      if (data && Array.isArray(data)) {
+        data.forEach(layer => {
+          try {
+            // If geojson is a string, parse it to object
+            let geojson = layer.geojson;
+            if (typeof geojson === 'string') geojson = JSON.parse(geojson);
+            // Add layer to map
+            map.addSource(layer.name, {
+              type: 'geojson',
+              data: geojson
+            });
+            map.addLayer({
+              id: layer.name,
+              type: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? 'circle' : 'line',
+              source: layer.name,
+              paint: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? {
+                'circle-radius': 7,
+                'circle-color': '#FF5733'
+              } : {
+                'line-color': '#007BFF',
+                'line-width': 3
+              }
+            });
+          } catch (err) {
+            console.error('Error adding saved layer:', err);
+          }
+        });
+      }
+    }
+
+    // Load layers when map loads
+    map.on('load', loadSavedLayers);
+
+    // Resize handle functionality
+    const resizeHandle = document.querySelector('.resize-handle');
+    const mapElement = document.getElementById('map');
+    const container = document.querySelector('.container');
+    let isResizing = false;
+
+    resizeHandle.addEventListener('mousedown', function (e) {
+      isResizing = true;
+      document.addEventListener('mousemove', resize);
+      document.addEventListener('mouseup', stopResize);
+    });
+
+    function resize(e) {
+      if (isResizing) {
+        let newWidth = e.clientX - mapElement.getBoundingClientRect().left;
+        let newHeight = e.clientY - mapElement.getBoundingClientRect().top;
+
+        if (newWidth > 950) newWidth = 950;
+        if (newWidth < 400) newWidth = 400;
+        if (newHeight > 550) newHeight = 550;
+        if (newHeight < 300) newHeight = 300;
+
+        mapElement.style.width = `${newWidth}px`;
+        mapElement.style.height = `${newHeight}px`;
+        container.style.width = `${newWidth + 40}px`;
+        map.resize();
+      }
+    }
+
+    function stopResize() {
+      isResizing = false;
+      document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResize);
+    }
+
+
+    // Modal (Info) window handling (remove info-btn code since it doesn't exist)
+    const infoModal = document.getElementById('info-modal');
+    const closeBtn = document.querySelector('.close-btn');
+    const infoText = document.getElementById('info-text');
+
+    closeBtn.addEventListener('click', () => infoModal.style.display = 'none');
+    window.addEventListener('click', (event) => {
+      if (event.target === infoModal) infoModal.style.display = 'none';
+    });
+
+    // Navigate button: moves map to entered coordinates
+    document.getElementById('navigate-btn').addEventListener('click', function() {
+      const coordInput = document.getElementById('coordinates').value.trim();
+      // Expect format: lat, lng or lng, lat
+      let lat, lng;
+      if (/^[\d.\-]+,\s*[\d.\-]+$/.test(coordInput)) {
+        const parts = coordInput.split(',').map(s => s.trim());
+        if (Math.abs(Number(parts[0])) <= 90 && Math.abs(Number(parts[1])) <= 180) {
+          lat = Number(parts[0]);
+          lng = Number(parts[1]);
+        } else {
+          lng = Number(parts[0]);
+          lat = Number(parts[1]);
+        }
+        if (!isNaN(lat) && !isNaN(lng)) {
+          map.flyTo({ center: [lng, lat], zoom: 17 });
+      // Search for nearest line from the three layers
+      let foundInfo = null;
+      const sources = ['layer1', 'layer2', 'layer3'];
+      for (let src of sources) {
+        const source = map.getSource(src);
+        if (source && source._data && source._data.features) {
+          for (let feature of source._data.features) {
+            if (feature.geometry.type === 'LineString') {
+              const pt = turf.point([lng, lat]);
+              const line = turf.lineString(feature.geometry.coordinates);
+              const dist = turf.pointToLineDistance(pt, line, { units: 'meters' });
+              if (dist < 20) {
+                foundInfo = {
+                  layer: src,
+                  fat_id: feature.properties.fat_id,
+                  zone_id: feature.properties.zone_id
+                };
+                break;
+              }
+            }
+          }
+        }
+        if (foundInfo) break;
+      }
+      // Add marker with info window
+      if (window.searchMarker) {
+        window.searchMarker.remove();
+      }
+      let infoHtml = `<div style='color:black;'>`;
+      if (foundInfo && (foundInfo.fat_id || foundInfo.zone_id)) {
+        if (foundInfo.fat_id) {
+          infoHtml += `<strong>fat_id:</strong> ${foundInfo.fat_id}<br>`;
+        }
+        if (foundInfo.zone_id) {
+          infoHtml += `<strong>zone_id:</strong> ${foundInfo.zone_id}<br>`;
+        }
+        infoHtml += `<strong>Layer Name:</strong> ${foundInfo.layer}<br>`;
+      } else {
+        infoHtml += `<strong>Location:</strong> ${lat}, ${lng}`;
+      }
+      infoHtml += `</div>`;
+      window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
+        .setLngLat([lng, lat])
+        .setPopup(new mapboxgl.Popup({ offset: 25 })
+          .setHTML(infoHtml))
+        .addTo(map);
+      window.searchMarker.getPopup().addTo(map);
+        } else {
+          alert('Please enter valid coordinates.');
+        }
+      } else {
+        alert('Please enter coordinates in the correct format: 33.294526, 44.430290');
+      }
+    });
+
+    // Search FAT button: searches for FAT and shows a message (can be improved later)
+    document.getElementById('search-btn').addEventListener('click', function() {
+      const searchVal = document.getElementById('fat-search').value.trim();
+      if (!searchVal) {
+        alert('Please enter Zone_ID and FAT# to search.');
+        return;
+      }
+      // Example: Z12 FAT123
+      // You can implement search in database or map layers here
+      alert('Searched for: ' + searchVal + '\n(You can improve the search later)');
+    });
+
+    // Right-click event to show coordinates and copy them
+    let currentCoordsPopup = null;
+    map.on('contextmenu', function(e) {
+      e.originalEvent.preventDefault();
+      if (currentCoordsPopup) currentCoordsPopup.remove();
+      const lng = e.lngLat.lng.toFixed(6);
+      const lat = e.lngLat.lat.toFixed(6);
+      const coordsString = `${lat}, ${lng}`;
+      const popupContent = document.createElement('div');
+      popupContent.style.color = 'black';
+      popupContent.innerHTML = `
+        <strong>Coordinates:</strong> ${coordsString}<br>
+        <button id="copy-coords-btn" style="margin-top: 5px; padding: 3px 8px; cursor: pointer;">Copy to Clipboard</button>
+      `;
+      currentCoordsPopup = new mapboxgl.Popup({ closeButton: true, closeOnClick: false })
+        .setLngLat(e.lngLat)
+        .setDOMContent(popupContent)
+        .addTo(map);
+      const copyButton = popupContent.querySelector('#copy-coords-btn');
+      copyButton.addEventListener('click', function() {
+        const tempInput = document.createElement('input');
+        tempInput.value = coordsString;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        copyButton.textContent = 'Copied!';
+        setTimeout(() => {
+          currentCoordsPopup.remove();
+          currentCoordsPopup = null;
+        }, 1000);
+      });
+      currentCoordsPopup.on('close', () => currentCoordsPopup = null);
+    });
+
+    // --- Add button to upload GeoJSON layer and save it in Supabase ---
+    const geojsonInput = document.getElementById('geojson-input');
+    const addLayerBtn = document.getElementById('add-layer-btn');
+    const saveLayersBtn = document.getElementById('save-layers-btn');
+    let loadedLayers = [];
+
+    // Supabase connection setup
+    const supabaseUrl = 'https://hkzfxpqjrwyxetsjdjor.supabase.co'; // Put your Supabase project URL here
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw'; // Put your Supabase key here
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Login screen
+    const loginScreen = document.getElementById('login-screen');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+    const loginUsername = document.getElementById('login-username');
+    const loginPassword = document.getElementById('login-password');
+    const headerWrapper = document.querySelector('.header-wrapper');
+    const mainContainer = document.querySelector('.container');
+
+    loginBtn.addEventListener('click', async () => {
+      const email = loginUsername.value.trim();
+      const password = loginPassword.value;
+      loginError.style.display = 'none';
+      if (!email || !password) {
+        loginError.textContent = 'Please enter email and password.';
+        loginError.style.display = 'block';
+        return;
+      }
+      // Login via Supabase Auth
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          loginError.textContent = 'Login error: ' + error.message;
+          loginError.style.display = 'block';
+          console.error('Supabase Auth error:', error);
+          return;
+        }
+        if (data && data.user) {
+          // Successful login
+          loginScreen.style.display = 'none';
+          headerWrapper.style.display = '';
+          mainContainer.style.display = '';
+          setTimeout(() => { map.resize(); }, 100); // Fix map size after showing container
+        } else {
+          loginError.textContent = 'Incorrect email or password.';
+          loginError.style.display = 'block';
+        }
+      } catch (err) {
+        loginError.textContent = 'Failed to connect to authentication service (see console for details).';
+        loginError.style.display = 'block';
+        console.error('Auth connection error:', err);
+      }
+    });
+
+    addLayerBtn.addEventListener('click', () => {
+      geojsonInput.value = '';
+      geojsonInput.click();
+    });
+
+    geojsonInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const geojson = JSON.parse(e.target.result);
+          const layerId = 'layer_' + Date.now();
+          // إضافة الطبقة للخريطة
+          map.addSource(layerId, {
+            type: 'geojson',
+            data: geojson
+          });
+          map.addLayer({
+            id: layerId,
+            type: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? 'circle' : 'line',
+            source: layerId,
+            paint: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? {
+              'circle-radius': 7,
+              'circle-color': '#FF5733'
+            } : {
+              'line-color': '#007BFF',
+              'line-width': 3
+            }
+          });
+          loadedLayers.push({ id: layerId, data: geojson });
+          alert('Layer added successfully!');
+        } catch (err) {
+          alert('Invalid GeoJSON file!');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    saveLayersBtn.addEventListener('click', async () => {
+      if (loadedLayers.length === 0) {
+        alert('No layers to save!');
+        return;
+      }
+      for (const layer of loadedLayers) {
+        // حفظ كل طبقة في جدول اسمه "layers" في supabase
+        const { data, error } = await supabase.from('layers').insert([
+          { name: layer.id, geojson: layer.data }
+        ]);
+        if (error) {
+          alert('Error saving layer: ' + error.message);
+          return;
+        }
+      }
+      alert('All layers saved to the database!');
+      loadedLayers = [];
+    });
+  </script>
+</body>
+</html>
