@@ -393,6 +393,13 @@
           'text-halo-width': 2
         }
       });
+
+    // Trigger navigation when Enter is pressed in coordinates input
+    document.getElementById('coordinates').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('navigate-btn').click();
+      }
+    });
       // layer3
       map.addSource('layer3', {
         type: 'geojson',
@@ -651,71 +658,137 @@
     // Navigate button: moves map to entered coordinates
     document.getElementById('navigate-btn').addEventListener('click', function() {
       const coordInput = document.getElementById('coordinates').value.trim();
-      // Expect format: lat, lng or lng, lat
+      // يقبل جميع صيغ الإحداثيات
       let lat, lng;
-      if (/^[\d.\-]+,\s*[\d.\-]+$/.test(coordInput)) {
-        const parts = coordInput.split(',').map(s => s.trim());
-        if (Math.abs(Number(parts[0])) <= 90 && Math.abs(Number(parts[1])) <= 180) {
-          lat = Number(parts[0]);
-          lng = Number(parts[1]);
-        } else {
-          lng = Number(parts[0]);
-          lat = Number(parts[1]);
+      let cleaned = coordInput.replace(/[^\d.\-]+/g, ',');
+      let parts = cleaned.split(',').filter(Boolean);
+      if (parts.length === 2) {
+        let a = Number(parts[0]);
+        let b = Number(parts[1]);
+        if (Math.abs(a) <= 90 && Math.abs(b) <= 180) {
+          lat = a;
+          lng = b;
+        } else if (Math.abs(b) <= 90 && Math.abs(a) <= 180) {
+          lng = a;
+          lat = b;
         }
-        if (!isNaN(lat) && !isNaN(lng)) {
-          map.flyTo({ center: [lng, lat], zoom: 17 });
-      // Search for nearest line from the three layers
-      let foundInfo = null;
-      const sources = ['layer1', 'layer2', 'layer3'];
-      for (let src of sources) {
-        const source = map.getSource(src);
-        if (source && source._data && source._data.features) {
-          for (let feature of source._data.features) {
-            if (feature.geometry.type === 'LineString') {
-              const pt = turf.point([lng, lat]);
-              const line = turf.lineString(feature.geometry.coordinates);
-              const dist = turf.pointToLineDistance(pt, line, { units: 'meters' });
-              if (dist < 20) {
-                foundInfo = {
+      }
+      if (!isNaN(lat) && !isNaN(lng)) {
+        map.flyTo({ center: [lng, lat], zoom: 17 });
+        // البحث عن أقرب FATs
+        let nearestFats = [];
+        const fatSources = ['fats_part1', 'fats_part2', 'fats_part3'];
+        for (let src of fatSources) {
+          const source = map.getSource(src);
+          let features = source && source._data ? (source._data.features || source._data.features) : [];
+          if (features && Array.isArray(features)) {
+            features.forEach(feature => {
+              if (feature.geometry && feature.geometry.type === 'Point') {
+                const pt = turf.point([lng, lat]);
+                const fatPt = turf.point(feature.geometry.coordinates);
+                const dist = turf.distance(pt, fatPt, { units: 'meters' });
+                // Ensure properties exist
+                let fat_id = feature.properties ? (feature.properties.fat_id || feature.properties.FAT_ID || feature.properties.id) : '';
+                let zone_id = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.zone) : '';
+                nearestFats.push({
+                  fat_id: fat_id,
+                  zone_id: zone_id,
                   layer: src,
-                  fat_id: feature.properties.fat_id,
-                  zone_id: feature.properties.zone_id
-                };
+                  dist: dist
+                });
+              }
+            });
+          }
+        }
+        nearestFats.sort((a, b) => a.dist - b.dist);
+        let fatsHtml = '';
+        if (nearestFats.length > 0) {
+          fatsHtml += `<strong>أقرب FATs:</strong><ul style='margin:0;padding-left:18px;'>`;
+          nearestFats.slice(0, 3).forEach(fat => {
+            fatsHtml += `<li>FAT: <b>${fat.fat_id}</b> (Zone: ${fat.zone_id || '-'} | طبقة: ${fat.layer}) <span style='color:#888;'>[${fat.dist.toFixed(1)}m]</span></li>`;
+          });
+          fatsHtml += `</ul>`;
+        }
+        // لا تكرر رسالة "لا يوجد FATs قريبة" مرتين، فقط في حالة عدم وجود أي FAT قريب
+
+        // البحث عن طبقة المنطقة
+        let zoneName = '';
+        const zoneSource = map.getSource('zoneLayer');
+        let zoneFeatures = zoneSource && zoneSource._data ? (zoneSource._data.features || zoneSource._data.features) : [];
+        if (zoneFeatures && Array.isArray(zoneFeatures)) {
+          for (let feature of zoneFeatures) {
+            if (feature.geometry && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
+              if (turf.booleanPointInPolygon([lng, lat], feature)) {
+                zoneName = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.name || feature.properties.id) : '';
                 break;
               }
             }
           }
         }
-        if (foundInfo) break;
-      }
-      // Add marker with info window
-      if (window.searchMarker) {
-        window.searchMarker.remove();
-      }
-      let infoHtml = `<div style='color:black;'>`;
-      if (foundInfo && (foundInfo.fat_id || foundInfo.zone_id)) {
-        if (foundInfo.fat_id) {
-          infoHtml += `<strong>fat_id:</strong> ${foundInfo.fat_id}<br>`;
+
+        // البحث عن أقرب خط (كما كان سابقاً)
+        let foundInfo = null;
+        const sources = ['layer1', 'layer2', 'layer3'];
+        for (let src of sources) {
+          const source = map.getSource(src);
+          let features = source && source._data ? (source._data.features || source._data.features) : [];
+          if (features && Array.isArray(features)) {
+            for (let feature of features) {
+              if (feature.geometry && feature.geometry.type === 'LineString') {
+                const pt = turf.point([lng, lat]);
+                const line = turf.lineString(feature.geometry.coordinates);
+                const dist = turf.pointToLineDistance(pt, line, { units: 'meters' });
+                if (dist < 20) {
+                  let fat_id = feature.properties ? (feature.properties.fat_id || feature.properties.FAT_ID || feature.properties.id) : '';
+                  let zone_id = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.zone) : '';
+                  foundInfo = {
+                    layer: src,
+                    fat_id: fat_id,
+                    zone_id: zone_id
+                  };
+                  break;
+                }
+              }
+            }
+          }
+          if (foundInfo) break;
         }
-        if (foundInfo.zone_id) {
-          infoHtml += `<strong>zone_id:</strong> ${foundInfo.zone_id}<br>`;
+
+        // Info window (English only)
+        if (window.searchMarker) {
+          window.searchMarker.remove();
         }
-        infoHtml += `<strong>Layer Name:</strong> ${foundInfo.layer}<br>`;
-      } else {
-        infoHtml += `<strong>Location:</strong> ${lat}, ${lng}`;
-      }
-      infoHtml += `</div>`;
-      window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
-        .setLngLat([lng, lat])
-        .setPopup(new mapboxgl.Popup({ offset: 25 })
-          .setHTML(infoHtml))
-        .addTo(map);
-      window.searchMarker.getPopup().addTo(map);
+        let infoHtml = `<div style='color:black;'>`;
+        infoHtml += `<strong>Location:</strong> ${lat}, ${lng}<br>`;
+        infoHtml += `<strong>Zone Layer:</strong> ${zoneName ? zoneName : 'Outside any zone'}<br>`;
+        if (foundInfo && foundInfo.layer) {
+          infoHtml += `<strong>Layer Name:</strong> ${foundInfo.layer}<br>`;
+        } else if (nearestFats.length > 0) {
+          infoHtml += `<strong>Layer Name:</strong> ${nearestFats[0].layer}<br>`;
+        }
+        if (nearestFats.length > 0) {
+          const nearest = nearestFats[0];
+          infoHtml += `<br><strong>Nearest FAT:</strong> <b>${nearest.fat_id}</b> (Zone: ${nearest.zone_id || '-'} | Layer: ${nearest.layer}) <span style='color:#888;'>[${nearest.dist.toFixed(1)}m]</span><br>`;
         } else {
-          alert('Please enter valid coordinates.');
+          infoHtml += `<br><strong>No nearby FATs found.</strong><br>`;
         }
+        infoHtml += `<br><hr style='margin:7px 0;'>`;
+        if (nearestFats.length > 0) {
+          infoHtml += `<strong>Nearest FATs:</strong><ul style='margin:0;padding-left:18px;'>`;
+          nearestFats.slice(0, 3).forEach(fat => {
+            infoHtml += `<li>FAT: <b>${fat.fat_id}</b> (Zone: ${fat.zone_id || '-'} | Layer: ${fat.layer}) <span style='color:#888;'>[${fat.dist.toFixed(1)}m]</span></li>`;
+          });
+          infoHtml += `</ul>`;
+        }
+        infoHtml += `</div>`;
+        window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
+          .setLngLat([lng, lat])
+          .setPopup(new mapboxgl.Popup({ offset: 25 })
+            .setHTML(infoHtml))
+          .addTo(map);
+        window.searchMarker.getPopup().addTo(map);
       } else {
-        alert('Please enter coordinates in the correct format: 33.294526, 44.430290');
+        alert('Please enter valid coordinates in any format, e.g.: 33.294526, 44.430290 or 33.294526 44.430290 or 44.430290;33.294526');
       }
     });
 
