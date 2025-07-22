@@ -349,6 +349,44 @@
       map.addLayer({
         id: 'layer1-label',
         type: 'symbol',
+      // Add fat_id label at centroid for layer1
+      map.getSource('layer1').on('data', function(e) {
+        if (e.isSourceLoaded) {
+          const features = map.getSource('layer1')._data.features;
+          const centroidFeatures = features.filter(f => f.geometry.type === 'LineString').map(f => {
+            const center = turf.center(f);
+            return {
+              type: 'Feature',
+              geometry: center.geometry,
+              properties: { fat_id: f.properties.fat_id || f.properties.FAT_ID || f.properties.id }
+            };
+          });
+          if (map.getSource('layer1-centroids')) {
+            map.getSource('layer1-centroids').setData({ type: 'FeatureCollection', features: centroidFeatures });
+          } else {
+            map.addSource('layer1-centroids', {
+              type: 'geojson',
+              data: { type: 'FeatureCollection', features: centroidFeatures }
+            });
+            map.addLayer({
+              id: 'layer1-centroid-label',
+              type: 'symbol',
+              source: 'layer1-centroids',
+              layout: {
+                'text-field': ['get', 'fat_id'],
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 14,
+                'text-offset': [0, 0.6]
+              },
+              paint: {
+                'text-color': '#009688',
+                'text-halo-color': '#232526',
+                'text-halo-width': 2
+              }
+            });
+          }
+        }
+      });
         source: 'layer1',
         layout: {
           'text-field': ['get', 'fat_id'],
@@ -366,6 +404,44 @@
       map.addSource('layer2', {
         type: 'geojson',
         data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson'
+      });
+      // Add fat_id label at centroid for layer2
+      map.getSource('layer2').on('data', function(e) {
+        if (e.isSourceLoaded) {
+          const features = map.getSource('layer2')._data.features;
+          const centroidFeatures = features.filter(f => f.geometry.type === 'LineString').map(f => {
+            const center = turf.center(f);
+            return {
+              type: 'Feature',
+              geometry: center.geometry,
+              properties: { fat_id: f.properties.fat_id || f.properties.FAT_ID || f.properties.id }
+            };
+          });
+          if (map.getSource('layer2-centroids')) {
+            map.getSource('layer2-centroids').setData({ type: 'FeatureCollection', features: centroidFeatures });
+          } else {
+            map.addSource('layer2-centroids', {
+              type: 'geojson',
+              data: { type: 'FeatureCollection', features: centroidFeatures }
+            });
+            map.addLayer({
+              id: 'layer2-centroid-label',
+              type: 'symbol',
+              source: 'layer2-centroids',
+              layout: {
+                'text-field': ['get', 'fat_id'],
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 14,
+                'text-offset': [0, 0.6]
+              },
+              paint: {
+                'text-color': '#009688',
+                'text-halo-color': '#232526',
+                'text-halo-width': 2
+              }
+            });
+          }
+        }
       });
       map.addLayer({
         id: 'layer2',
@@ -385,6 +461,44 @@
           'text-field': ['get', 'fat_id'],
           'symbol-placement': 'line',
           'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+      // Add fat_id label at centroid for layer3
+      map.getSource('layer3').on('data', function(e) {
+        if (e.isSourceLoaded) {
+          const features = map.getSource('layer3')._data.features;
+          const centroidFeatures = features.filter(f => f.geometry.type === 'LineString').map(f => {
+            const center = turf.center(f);
+            return {
+              type: 'Feature',
+              geometry: center.geometry,
+              properties: { fat_id: f.properties.fat_id || f.properties.FAT_ID || f.properties.id }
+            };
+          });
+          if (map.getSource('layer3-centroids')) {
+            map.getSource('layer3-centroids').setData({ type: 'FeatureCollection', features: centroidFeatures });
+          } else {
+            map.addSource('layer3-centroids', {
+              type: 'geojson',
+              data: { type: 'FeatureCollection', features: centroidFeatures }
+            });
+            map.addLayer({
+              id: 'layer3-centroid-label',
+              type: 'symbol',
+              source: 'layer3-centroids',
+              layout: {
+                'text-field': ['get', 'fat_id'],
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 14,
+                'text-offset': [0, 0.6]
+              },
+              paint: {
+                'text-color': '#009688',
+                'text-halo-color': '#232526',
+                'text-halo-width': 2
+              }
+            });
+          }
+        }
+      });
           'text-size': 14
         },
         paint: {
