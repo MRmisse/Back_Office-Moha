@@ -1,0 +1,14 @@
+(Subject) Incident:  zone ( FBG7450 ) down
+
+TO: -metronbb
+
+CC; "Ali Rabeea al-Ubaydi" <arabeea@earthlink.iq>; "Muhammad Farqad al-Radi" <mufarqad@earthlink.iq>; "Hani Sami Albutani" <hsami@earthlink.iq>; "Bilal Abid al-Haq al-Mahdawi" <bhaq@earthlink.iq>; "supportftth" <supportftth@earthlink.iq>; "Sayf Hassun al-Amiri" <shassun@earthlink.iq>; "Muhannad Basim al-Duri" <mbasim@earthlink.iq>; "Suhayl Najm al-Awis" <sunajm@earthlink.iq>; "Ahmad Isam al-Azami" <ahisam@earthlink.iq>; "Fawaz AlNuaimi" <fkhazal@hulum.iq>; "Wael Muhammad al-Qaysi" <wamuhammad@earthlink.iq>
+ 
+Message:
+
+Dear Metro Team,
+We would like to inform you that we have a zone down (Zahraa Al-Zaafaranya complex) FBG7450
+
+
+Start ON:3 / 3 /2025  2:47 AM
+User Affected: 129
