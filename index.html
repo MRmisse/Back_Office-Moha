@@ -260,6 +260,35 @@
     <button class="button" onclick="copyTemplateText('feedtemplates/template32.txt', this)" style="display:none;">التجديد التلفائي</button>
     <button class="button" onclick="copyTemplateText('feedtemplates/template31.txt', this)" style="display:none;">test</button>
 </div>
+
+<div id="email-templates" class="hidden container" style="margin-top:40px;">
+    <button class="button" onclick="hideEmailTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+    <button class="button" onclick="showTemplateContent('templates/template6.txt', this)">Zone Down</button>
+    <button class="button" onclick="showTemplateContent('templates/template21.txt', this)">Zone complex Down</button>
+    <button class="button" onclick="showTemplateContent('templates/template1.txt', this)">Portal Slow</button>
+    <button class="button" onclick="showTemplateContent('templates/template2.txt', this)">DNS Problem</button>
+    <button class="button" onclick="showTemplateContent('templates/template3.txt', this)">Portal stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template4.txt', this)">Problem Refill users</button>
+    <button class="button" onclick="showTemplateContent('templates/template5.txt', this)">Drop Services</button>
+    <button class="button" onclick="showTemplateContent('templates/template7.txt', this)">Attachment issue</button>
+    <button class="button" onclick="showTemplateContent('templates/template8.txt', this)">Most GPON Down</button>
+    <button class="button" onclick="showTemplateContent('templates/template9.txt', this)">OLT Down MGM</button>
+    <button class="button" onclick="showTemplateContent('templates/template10.txt', this)">Operation Outage</button>
+    <button class="button" onclick="showTemplateContent('templates/template11.txt', this)">Site down</button>
+    <button class="button" onclick="showTemplateContent('templates/template12.txt', this)">OTP Service Stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template13.txt', this)">Alwatani App Stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template14.txt', this)">Wallet transactions Issue</button>
+    <button class="button" onclick="showTemplateContent('templates/template15.txt', this)">Sales Portal stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template16.txt', this)">Almanasa stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template17.txt', this)">Creatio stopped</button>
+    <button class="button" onclick="showTemplateContent('templates/template18.txt', this)">Customer Onboarding Request Issue</button>
+    <button class="button" onclick="showTemplateContent('templates/template19.txt', this)">VLAN Site activation</button>
+    <button class="button" onclick="showTemplateContent('templates/template20.txt', this)">ADD FAT TO CREATIO</button>
+    <textarea id="template-content-viewer" rows="12" style="width:100%;font-size:1.1em;direction:ltr;resize:vertical;margin-top:18px;display:none;" readonly placeholder="سيظهر محتوى القالب هنا..."></textarea>
+</div>
+
+
+
 <!-- مجموعة أزرار القوالب الخاصة فقط -->
 <div id="custom-templates" class="hidden container" style="margin-top:40px;">
     <button class="button" onclick="hideCustomTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة لقوالب التغذية</button>
@@ -287,6 +316,7 @@
             <div class="dropdown-content">
                 <button onclick="showFeedBackTemplates()">FEED BACK NEW</button>
                 <button onclick="showCustomTemplates()">FEED BACK FATS</button>
+                    <button onclick="showEmailTemplates()">Templates</button>
                 <button onclick="showExtraTemplates()"> tabadul Template </button>
             </div>
         </div>
@@ -325,7 +355,47 @@
         <span style="font-size:1.5em;vertical-align:middle;">✔️</span> تم النسخ
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+ 
     <script>
+    // زر Templates لإظهار/إخفاء أزرار القوالب
+    const showEmailTemplatesBtn = document.getElementById('show-email-templates-btn');
+    const emailTemplatesDiv = document.getElementById('email-templates');
+    if (showEmailTemplatesBtn && emailTemplatesDiv) {
+        showEmailTemplatesBtn.addEventListener('click', function() {
+            emailTemplatesDiv.classList.toggle('hidden');
+        });
+    }
+
+    // إظهار زر Templates مع باقي أزرار feedback عند عرض القوالب
+    function showFeedBackTemplates() {
+        document.getElementById('main-buttons').classList.add('hidden');
+        document.getElementById('feedback-templates').classList.remove('hidden');
+        document.querySelectorAll('#feedback-templates .button').forEach(btn => {
+            if (btn.textContent !== 'عودة للقائمة الرئيسية') {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'block';
+            }
+        });
+        if (showEmailTemplatesBtn) showEmailTemplatesBtn.style.display = 'block';
+        if (document.getElementById('showFeedBackFATS')) {
+            document.getElementById('showFeedBackFATS').classList.add('hidden');
+        }
+    }
+
+    // دالة fetchTemplate (إذا لم تكن موجودة)
+    if (typeof fetchTemplate !== 'function') {
+        function fetchTemplate(path, label) {
+            fetch(path)
+                .then(res => res.text())
+                .then(txt => {
+                    navigator.clipboard.writeText(txt);
+                    alert(label + "\n\n" + txt + "\n\nتم نسخ النص!");
+                })
+                .catch(() => alert('Template not found!'));
+        }
+    }
     // دالة نسخ نص مباشر
     function copyText(text) {
         // الحصول على الزر الذي تم الضغط عليه
@@ -531,6 +601,22 @@
             setTimeout(()=>{el.classList.remove('show');}, 2000);
         }
 
+    // عرض محتوى القالب في textarea فقط عند الضغط على زر templates
+    function showTemplateContent(path, btn) {
+        fetch(path)
+            .then(res => res.text())
+            .then(txt => {
+                const textarea = document.getElementById('template-content-viewer');
+                textarea.value = txt;
+                textarea.style.display = 'block';
+            })
+            .catch(() => {
+                const textarea = document.getElementById('template-content-viewer');
+                textarea.value = 'تعذر تحميل القالب';
+                textarea.style.display = 'block';
+            });
+    }
+
         function hideFeedBackTemplates() {
             document.getElementById('feedback-templates').classList.add('hidden');
             document.getElementById('main-buttons').classList.remove('hidden');
@@ -554,6 +640,20 @@
             });
             if (showTemplatesBtn) showTemplatesBtn.style.display = 'block';
         }
+
+        function showEmailTemplates() {
+    document.getElementById('main-buttons').classList.add('hidden');
+    document.getElementById('feedback-templates').classList.add('hidden');
+    document.getElementById('custom-templates').classList.add('hidden');
+    document.getElementById('extra-templates').classList.add('hidden');
+    document.getElementById('email-templates').classList.remove('hidden');
+}
+function hideEmailTemplates() {
+    document.getElementById('email-templates').classList.add('hidden');
+    document.getElementById('main-buttons').classList.remove('hidden');
+}
+
+
     </script>
 </body>
 </html>
