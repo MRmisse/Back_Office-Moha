@@ -1,1 +1,56 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onu Working</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #192d61 0%, #223a5e 100%);
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 2.5rem;
+            color: #f5f6fa;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
+        }
+        .sheet-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 40px auto 0 auto;
+            width: 95vw;
+            max-width: 1400px;
+            height: 80vh;
+        }
+        .sheet-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px #223a5e40;
+            background: #fff;
+        }
+        @media (max-width: 900px) {
+            .sheet-container { height: 65vh; }
+        }
+        @media (max-width: 600px) {
+            .sheet-container { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Google Sheet</div>
+    <div class="sheet-container">
+        <iframe class="sheet-iframe" src="https://earthlinktel.sharepoint.com/:x:/s/FTTHTechnicalSupport-FTTHMorning-Evening/ERjmb5Fu3H1Fvux_w2i1NqYBtvjE4dcOmmYdurF7xzbEHQ?e=sVeqBO" allowfullscreen></iframe>
+    </div>
+</body>
+</html>
