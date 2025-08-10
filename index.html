@@ -182,47 +182,94 @@
             transform: none;
             box-shadow: none;
         }
+        /* Modern login card */
         .login-box {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            max-width: 440px;
+            margin: 56px auto 0;
+            padding: 28px 26px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
+            position: relative;
+        }
+        .login-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 1px; /* gradient border */
+            background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(6,182,212,0.35));
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         .login-box h2 {
-            margin-bottom: 20px;
-            color: #f5f6fa;
+            margin: 0 0 18px 0;
+            color: #eaf1ff;
+            font-size: 1.6rem;
+            letter-spacing: .5px;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .login-box input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
+            padding: 14px 14px;
+            margin: 10px 0 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
             font-size: 1rem;
+            outline: none;
+            transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+        .login-box input::placeholder {
+            color: #cbd5e1;
+        }
+        .login-box input:focus {
+            border-color: rgba(59,130,246,0.6);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+            background: rgba(255,255,255,0.12);
         }
         .login-box button {
             width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
-            color: white;
-            font-size: 1.2rem;
+            padding: 14px 16px;
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+            transition: background 180ms ease, transform 160ms ease, box-shadow 160ms ease;
+            box-shadow: var(--btn-shadow);
+            margin-top: 6px;
         }
         .login-box button:hover {
-            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
-            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(135deg, var(--btn-hover-start), var(--btn-hover-end));
+            transform: translateY(-2px);
+            box-shadow: var(--btn-shadow-hover);
+        }
+        .login-box button:focus-visible {
+            outline: none;
+            box-shadow: var(--btn-shadow-hover), var(--ring);
+        }
+        #login-error {
+            color: #ffb3b3;
+            background: rgba(255, 0, 0, 0.08);
+            border: 1px solid rgba(255, 0, 0, 0.18);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            text-align: center;
         }
         .logout-btn {
             position: fixed;
@@ -477,9 +524,9 @@
             <div class="dropdown-content">
                 <button onclick="window.open('https://pwm.earthlink.iq/pwm/private/login')">PWM</button>
                 <button onclick="window.open('https://vpn.earthlink.iq/')">VPN</button>
-                <button onclick="window.open('https://otp.el.earthlink.iq/#!/login')">PRIVACY IDEA AUTHENTICATOR</button>
-               <button onclick="window.open('https://ipa01.el.earthlink.iq/ipa/ui/')">HRMS</button>
-               <button onclick="window.open('https://hrms.elcld.net/interface/html5/#!m=Login')">TIMETREX</button>
+                <button onclick="window.open('https://otp.el.earthlink.iq/#!/login')">PRIVACY ID AUTHENTICATOR</button>
+                <button onclick="window.open('https://ipa01.el.earthlink.iq/ipa/ui/')">HRMS</button>
+                <button onclick="window.open('https://hrms.elcld.net/interface/html5/#!m=Login')">TIMETREX</button>
 
             </div>
         </div>
