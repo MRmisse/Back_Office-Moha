@@ -239,36 +239,53 @@
         });
       });
   // Create centroid-based labels by fetching the FATREG GeoJSON directly
-      function buildCentroidsFromFeatures(fc) {
-        const points = [];
-        if (!fc || !Array.isArray(fc.features)) return { type: 'FeatureCollection', features: points };
-        fc.features.forEach(f => {
-          if (!f || !f.geometry) return;
-          const props = f.properties || {};
-          const keys = ['fat_id','FAT_ID','FAT','fat','fatid','Fat_ID','fatId','FATID','FatID','fat_code','FAT_CODE','fatCode','id','ID','name','Name'];
-          let labelVal;
-          for (const k of keys) { if (props[k] !== undefined && props[k] !== null && String(props[k]).trim() !== '') { labelVal = props[k]; break; } }
-          if (f.geometry.type === 'LineString') {
-            const line = turf.lineString(f.geometry.coordinates);
-            const lenKm = turf.length(line, { units: 'kilometers' });
-            const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(f.geometry.coordinates[0]);
-            mid.properties = { ...props };
-            if (labelVal !== undefined) mid.properties.fat_id = String(labelVal);
-            points.push(mid);
-          } else if (f.geometry.type === 'MultiLineString') {
-            const first = f.geometry.coordinates && f.geometry.coordinates[0];
-            if (first && first.length >= 2) {
-              const line = turf.lineString(first);
-              const lenKm = turf.length(line, { units: 'kilometers' });
-              const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(first[0]);
-              mid.properties = { ...props };
-              if (labelVal !== undefined) mid.properties.fat_id = String(labelVal);
-              points.push(mid);
-            }
-          }
-        });
-        return { type: 'FeatureCollection', features: points };
+     function buildCentroidsFromFeatures(fc) {
+  const points = [];
+  if (!fc || !Array.isArray(fc.features)) return { type: 'FeatureCollection', features: points };
+
+  fc.features.forEach(f => {
+    if (!f || !f.geometry) return;
+    const props = f.properties || {};
+    const keys = ['fat_id','FAT_ID','FAT','fat','fatid','Fat_ID','fatId','FATID','FatID',
+                  'fat_code','FAT_CODE','fatCode','id','ID','name','Name'];
+    let labelVal;
+    for (const k of keys) {
+      if (props[k] !== undefined && props[k] !== null && String(props[k]).trim() !== '') {
+        labelVal = props[k];
+        break;
       }
+    }
+
+    // ✅ دعم LineString
+    if (f.geometry.type === 'LineString') {
+      const line = turf.lineString(f.geometry.coordinates);
+      const lenKm = turf.length(line, { units: 'kilometers' });
+      const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(f.geometry.coordinates[0]);
+      mid.properties = { ...props, fat_id: String(labelVal || '') };
+      points.push(mid);
+
+    // ✅ دعم MultiLineString
+    } else if (f.geometry.type === 'MultiLineString') {
+      const first = f.geometry.coordinates && f.geometry.coordinates[0];
+      if (first && first.length >= 2) {
+        const line = turf.lineString(first);
+        const lenKm = turf.length(line, { units: 'kilometers' });
+        const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(first[0]);
+        mid.properties = { ...props, fat_id: String(labelVal || '') };
+        points.push(mid);
+      }
+
+    // ✅ دعم Polygon و MultiPolygon
+    } else if (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') {
+      const centroid = turf.centroid(f);
+      centroid.properties = { ...props, fat_id: String(labelVal || '') };
+      points.push(centroid);
+    }
+  });
+
+  return { type: 'FeatureCollection', features: points };
+}
+
 
       async function addFatCentroidFromUrl(baseId, url) {
         const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
@@ -299,9 +316,9 @@
               'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
               'text-size': 16,
               'text-offset': [0, 0.6],
-              'text-anchor': 'top',
+              'text-anchor': 'center',
               'text-allow-overlap': true,
-              'text-ignore-placement': true
+              'text-ignore-placement': true,
             },
             paint: {
               'text-color': '#ffffff',
