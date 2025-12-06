@@ -13,6 +13,7 @@
   <style>
     /* Ensure padding/border don’t cause overflow */
     *, *::before, *::after { box-sizing: border-box; }
+
     /* Theme variables (match index.html) */
     :root {
       --bg-start: #192d61;
@@ -27,52 +28,441 @@
       --ring: 0 0 0 3px rgba(59,130,246,0.35);
       --radius: 16px;
     }
+
     body {
       background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
       font-family: 'Cairo', Arial, sans-serif;
-      margin: 0; padding: 0; min-height: 100vh; color: #f5f6fa;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: #f5f6fa;
     }
-    .header { text-align: center; margin-top: 40px; font-size: 2.5rem; color: #f5f6fa; font-weight: bold; letter-spacing: 2px; text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e; }
 
-    /* Unified modern buttons */
-    button, .button, .dropbtn { appearance: none; background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end)); color: var(--btn-text); border: 1px solid transparent; border-radius: var(--radius); padding: 14px 16px; margin: 0; font-size: 1.05rem; line-height: 1.2; cursor: pointer; transition: background 180ms ease, transform 160ms ease, box-shadow 160ms ease, border-color 180ms ease; box-shadow: var(--btn-shadow); width: auto; min-width: 0; font-family: inherit; font-weight: 600; letter-spacing: 0.2px; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-align: center; user-select: none; }
-    button:hover, .button:hover, .dropbtn:hover { background: linear-gradient(135deg, var(--btn-hover-start), var(--btn-hover-end)); transform: translateY(-2px); box-shadow: var(--btn-shadow-hover); }
-    button:active, .button:active, .dropbtn:active { transform: translateY(0); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
-    button:focus-visible, .button:focus-visible, .dropbtn:focus-visible { outline: none; box-shadow: var(--btn-shadow-hover), var(--ring); }
-    button:disabled, .button:disabled, .dropbtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .header {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 2.5rem;
+      color: #f5f6fa;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
+    }
 
-  /* Login card */
-  .login-box { max-width: 440px; margin: 32px auto 0; padding: 28px 26px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 20px 60px rgba(0,0,0,0.25); display: flex; flex-direction: column; align-items: stretch; position: relative; overflow: hidden; }
-  .login-box form { display: flex; flex-direction: column; gap: 10px; }
-    .login-box::before { content: ''; position: absolute; inset: 0; border-radius: 18px; padding: 1px; background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(6,182,212,0.35)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-    .login-box h2 { margin: 0 0 18px 0; color: #eaf1ff; font-size: 1.6rem; letter-spacing: .5px; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-  .login-box input { width: 100%; max-width: 100%; min-width: 0; padding: 14px 14px; margin: 0; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; background: rgba(255,255,255,0.08); color: #ffffff; font-size: 1rem; outline: none; transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease; }
-  .login-box button { width: 100%; max-width: 100%; min-width: 0; }
-    .login-box input::placeholder { color: #dbeafe; opacity: 0.8; }
-    .login-box input:focus { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 0 3px rgba(59,130,246,0.25); background: rgba(255,255,255,0.12); }
-    #login-error { color: #ffb4b4; margin-top: 10px; font-size: 0.95rem; min-height: 1.2em; }
+    /* Unified modern buttons (default) */
+    button,
+    .button,
+    .dropbtn {
+      appearance: none;
+      background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+      color: var(--btn-text);
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 180ms ease;
+      box-shadow: var(--btn-shadow);
+      width: auto;
+      min-width: 0;
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      user-select: none;
+    }
+
+    button:hover,
+    .button:hover,
+    .dropbtn:hover {
+      background: linear-gradient(135deg, var(--btn-hover-start), var(--btn-hover-end));
+      transform: translateY(-2px);
+      box-shadow: var(--btn-shadow-hover);
+    }
+
+    button:active,
+    .button:active,
+    .dropbtn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    }
+
+    button:focus-visible,
+    .button:focus-visible,
+    .dropbtn:focus-visible {
+      outline: none;
+      box-shadow: var(--btn-shadow-hover), var(--ring);
+    }
+
+    button:disabled,
+    .button:disabled,
+    .dropbtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Link-style button (for "Forgot password?") */
+    button.link-button {
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      color: #93c5fd;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0;
+      display: inline;
+      border-radius: 0;
+    }
+
+    button.link-button:hover {
+      background: none;
+      box-shadow: none;
+      transform: none;
+      color: #bfdbfe;
+      text-decoration: underline;
+    }
+
+    button.link-button:focus-visible {
+      box-shadow: none;
+      text-decoration: underline;
+    }
+
+    /* Login card */
+    .login-box {
+      max-width: 440px;
+      margin: 32px auto 0;
+      padding: 28px 26px 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(6,182,212,0.35));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-header h2 {
+      margin: 0;
+      color: #eaf1ff;
+      font-size: 1.7rem;
+      letter-spacing: .5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .login-header p {
+      margin: 6px 0 0;
+      font-size: 0.95rem;
+      color: #cbd5ff;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-box input {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      padding: 14px 14px;
+      margin: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+      transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        background 160ms ease;
+    }
+
+    .login-box input::placeholder {
+      color: #dbeafe;
+      opacity: 0.8;
+    }
+
+    .login-box input:focus {
+      border-color: rgba(59,130,246,0.8);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .login-box button {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .login-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #dbeafe;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .login-footer-left input[type="checkbox"] {
+      accent-color: #3b82f6;
+      width: 14px;
+      height: 14px;
+    }
+
+    #login-error {
+      color: #ffb4b4;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      min-height: 1.2em;
+    }
 
     /* Map container card */
-    .container { max-width: 1100px; width: min(96%, 1100px); margin: 28px auto 40px auto; padding: 24px; text-align: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
-    .container h1 { font-size: 2rem; margin: 0 0 8px; }
-    .container p { margin: 0 0 18px; color: #d5deff; }
-    .input-section { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .input-section input { padding: 13px 16px; font-size: 1.05rem; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; border-radius: 12px; width: 270px; outline: none; transition: border 0.2s, box-shadow 0.2s, background 0.2s; }
-    .input-section input:focus { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 0 3px rgba(59,130,246,0.25); background: rgba(255,255,255,0.12); }
+    .container {
+      max-width: 1100px;
+      width: min(96%, 1100px);
+      margin: 28px auto 40px auto;
+      padding: 24px;
+      text-align: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
 
-    #map { height: 520px; width: 100%; border-radius: 18px; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25); margin: 0 auto; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); }
-    .resize-handle { position: absolute; bottom: 0; right: 0; width: 22px; height: 22px; background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end)); cursor: se-resize; z-index: 1000; border-radius: 7px 0 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.10); }
+    .container h1 {
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
 
-    #sidebar { position: fixed; top: 120px; right: 0; width: 260px; height: calc(100% - 140px); background: rgba(255,255,255,0.08); color: #f5f6fa; padding: 18px 12px 12px; box-shadow: -2px 0 12px rgba(0,0,0,0.10); overflow-y: auto; z-index: 1000; border-radius: 18px 0 0 18px; border: 1px solid rgba(255,255,255,0.12); }
-    #sidebar h3 { margin-top: 0; color: #eaf1ff; font-size: 1.2rem; letter-spacing: 1px; }
-    #sidebar ul { list-style-type: none; padding: 0; }
-    #sidebar ul li { cursor: pointer; padding: 7px 10px; margin: 7px 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #fff; font-size: 1rem; transition: background 0.2s, color 0.2s, transform 0.15s; }
-    #sidebar ul li:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .container p {
+      margin: 0 0 18px;
+      color: #d5deff;
+    }
 
-    .mapboxgl-ctrl-attrib { position: absolute; bottom: 10px; left: 10px; right: auto; width: 230px; text-align: left; z-index: 1001; background: rgba(34, 58, 94, 0.55); padding: 7px; border-radius: 7px; color: #fff; font-size: 0.95rem; }
+    .input-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .input-section input {
+      padding: 13px 16px;
+      font-size: 1.05rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-radius: 12px;
+      width: 270px;
+      outline: none;
+      transition:
+        border 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+    }
+
+    .input-section input:focus {
+      border-color: rgba(59,130,246,0.8);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+      background: rgba(255,255,255,0.12);
+    }
+
+    #map {
+      height: 520px;
+      width: 100%;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+      cursor: se-resize;
+      z-index: 1000;
+      border-radius: 7px 0 0 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+
+    /* Sidebar for FATs in Zone */
+    #sidebar {
+      position: fixed;
+      top: 120px;
+      right: 0;
+      width: 260px;
+      height: calc(100% - 140px);
+      background: rgba(15,23,42,0.88);
+      color: #f5f6fa;
+      padding: 18px 12px 12px;
+      box-shadow: -2px 0 12px rgba(0,0,0,0.25);
+      overflow-y: auto;
+      z-index: 1000;
+      border-radius: 18px 0 0 18px;
+      border: 1px solid rgba(148,163,184,0.55);
+    }
+
+    #sidebar h3 {
+      margin-top: 0;
+      color: #eaf1ff;
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+    }
+
+    #sidebar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #sidebar ul li {
+      cursor: pointer;
+      padding: 7px 10px;
+      margin: 7px 0;
+      background: rgba(31,41,55,0.9);
+      border: 1px solid rgba(75,85,99,0.9);
+      border-radius: 10px;
+      color: #e5e7eb;
+      font-size: 0.98rem;
+      transition:
+        background 0.2s,
+        color 0.2s,
+        transform 0.15s,
+        border-color 0.2s;
+    }
+
+    #sidebar ul li:hover {
+      background: rgba(55,65,81,1);
+      transform: translateY(-1px);
+      border-color: #60a5fa;
+    }
+
+    .mapboxgl-ctrl-attrib {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: auto;
+      width: 230px;
+      text-align: left;
+      z-index: 1001;
+      background: rgba(34, 58, 94, 0.55);
+      padding: 7px;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
 
     .hidden { display: none !important; }
-    .logout-btn { position: fixed; bottom: 24px; right: 24px; z-index: 1500; }
+
+    .logout-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1500;
+    }
+
+    /* Modal (used for Forgot password contact card) */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .modal-content {
+      background: rgba(15,23,42,0.96);
+      border-radius: 18px;
+      padding: 20px 22px;
+      border: 1px solid rgba(148,163,184,0.7);
+      max-width: 360px;
+      width: 90%;
+      color: #e5e7eb;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.15rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #9ca3af;
+    }
+
+    .close-btn:hover {
+      color: #e5e7eb;
+    }
   </style>
 </head>
 <body>
@@ -80,28 +470,46 @@
 
   <!-- Login card -->
   <div class="login-box" id="login-box">
-    <h2>Login</h2>
-    <form id="login-form">
-      <input id="login-username" type="email" placeholder="Email" required />
+    <div class="login-header">
+      <h2>Back Office Login</h2>
+      <p>Sign in to access Mini QGIS tools</p>
+    </div>
+    <form id="login-form" class="login-form">
+      <input id="login-username" type="email" placeholder="Email address" required />
       <input id="login-password" type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
+      <button type="submit">Sign in</button>
       <div id="login-error"></div>
     </form>
+    <div class="login-footer">
+      <div class="login-footer-left">
+        <input type="checkbox" id="remember-me" />
+        <label for="remember-me">Remember me</label>
+      </div>
+      <button type="button" id="forgot-password-btn" class="link-button">Forgot password?</button>
+    </div>
   </div>
 
   <div class="container hidden" id="main-container">
     <h1>Mini QGIS</h1>
-    <p>Enter coordinates to explore any location on the map.</p>
+    <p>Enter coordinates or FAT details to explore your network on the map.</p>
 
     <div class="input-section">
-      <input type="text" id="coordinates" placeholder="Enter coordinates (e.g., 33.294526, 44.430290)" />
+      <input
+        type="text"
+        id="coordinates"
+        placeholder="Enter coordinates (e.g., 33.294526, 44.430290)"
+      />
       <button id="navigate-btn" type="button">Navigate</button>
-      <input type="text" id="fat-search" placeholder="Enter Zone_ID and FAT# (e.g., Z12 FAT123)" />
+      <input
+        type="text"
+        id="fat-search"
+        placeholder="Enter Zone and FAT (e.g., Z12 FAT123)"
+      />
       <button id="search-btn" type="button">Search FAT</button>
       <input type="file" id="geojson-input" accept=".json,.geojson" style="display:none" />
     </div>
 
-    <!-- Modal for Info -->
+    <!-- Info modal (used as 'Forgot password' contact card) -->
     <div id="info-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
@@ -113,7 +521,7 @@
     <div class="resize-handle"></div>
   </div>
 
-  <!-- Sidebar for displaying pole numbers -->
+  <!-- Sidebar for displaying FATs in current Zone -->
   <div id="sidebar" style="display: none;">
     <h3>FATs in Zone</h3>
     <ul id="pole-list"></ul>
@@ -125,18 +533,72 @@
   <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
   <script>
-    // Feature flag for optional layers
+    // Feature flag for optional layers saved in Supabase table "layers"
     const ENABLE_SUPABASE_LAYERS = false;
 
-    // Supabase init (same as index)
+    // Supabase init
     const supabaseUrl = 'https://hkzfxpqjrwyxetsjdjor.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw';
+    const supabaseKey =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     // Map init
-  mapboxgl.accessToken = 'pk.eyJ1IjoibWlzc2UxMjU1IiwiYSI6ImNtZWVmbDN6ajBnaWIya3M5OHB4bGR6ZmQifQ.MNxszS0ZnhM7d9W53glUrA';
-    const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/streets-v11', center: [44.43021532030931, 33.29456720199863], zoom: 17 });
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoibWlzc2UxMjU1IiwiYSI6ImNtZWVmbDN6ajBnaWIya3M5OHB4bGR6ZmQifQ.MNxszS0ZnhM7d9W53glUrA';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [44.43021532030931, 33.29456720199863],
+      zoom: 17
+    });
     map.addControl(new mapboxgl.NavigationControl());
+
+    // Global caches for FAT and Zone features (used for search + sidebar)
+    let fatFeatures = []; // [{ layerId, feature }]
+    let zoneFeatures = []; // [Feature]
+
+    async function preloadStaticData() {
+      const fatUrls = {
+        fats_part1:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson',
+        fats_part2:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part2%20(1).geojson',
+        fats_part3:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part3.geojson'
+      };
+      const zoneUrl =
+        'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson';
+
+      try {
+        // Load FAT points
+        const fatPromises = Object.entries(fatUrls).map(([layerId, url]) =>
+          fetch(url, { mode: 'cors', credentials: 'omit' })
+            .then((r) => r.json())
+            .then((fc) => {
+              if (!fc || !Array.isArray(fc.features)) return;
+              fc.features.forEach((f) => {
+                if (f && f.geometry && f.geometry.type === 'Point') {
+                  fatFeatures.push({ layerId, feature: f });
+                }
+              });
+            })
+            .catch((e) => console.warn('Error loading FAT features for', layerId, e))
+        );
+
+        // Load Zones
+        const zonePromise = fetch(zoneUrl, { mode: 'cors', credentials: 'omit' })
+          .then((r) => r.json())
+          .then((fc) => {
+            zoneFeatures = fc && Array.isArray(fc.features) ? fc.features : [];
+          })
+          .catch((e) => console.warn('Error loading zone features', e));
+
+        await Promise.all([...fatPromises, zonePromise]);
+        console.log('Preloaded features: FATs =', fatFeatures.length, 'Zones =', zoneFeatures.length);
+      } catch (e) {
+        console.warn('Error preloading data', e);
+      }
+    }
 
     // Login UI
     const loginForm = document.getElementById('login-form');
@@ -146,26 +608,46 @@
     const loginBox = document.getElementById('login-box');
     const mainContainer = document.getElementById('main-container');
     const logoutBtn = document.getElementById('logout-btn');
+    const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+
+    const infoModal = document.getElementById('info-modal');
+    const infoText = document.getElementById('info-text');
+    const closeInfoBtn = document.querySelector('#info-modal .close-btn');
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = loginUsername.value.trim();
       const password = loginPassword.value;
       loginError.textContent = '';
-      if (!email || !password) { loginError.textContent = 'Please enter email and password.'; return; }
+
+      if (!email || !password) {
+        loginError.textContent = 'Please enter email and password.';
+        return;
+      }
+
       try {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) { loginError.textContent = 'Login error: ' + error.message; return; }
+        if (error) {
+          loginError.textContent = 'Login error: ' + error.message;
+          return;
+        }
         if (data && data.user) {
           loginBox.classList.add('hidden');
           mainContainer.classList.remove('hidden');
           logoutBtn.classList.remove('hidden');
           setTimeout(() => map.resize(), 50);
-        } else { loginError.textContent = 'Incorrect email or password.'; }
-      } catch (err) { loginError.textContent = 'Failed to connect to authentication service.'; }
+        } else {
+          loginError.textContent = 'Incorrect email or password.';
+        }
+      } catch (err) {
+        loginError.textContent = 'Failed to connect to authentication service.';
+      }
     });
+
     logoutBtn.addEventListener('click', async () => {
-      try { await supabase.auth.signOut(); } catch (_) {}
+      try {
+        await supabase.auth.signOut();
+      } catch (_) {}
       loginForm.reset();
       mainContainer.classList.add('hidden');
       logoutBtn.classList.add('hidden');
@@ -173,12 +655,44 @@
       setTimeout(() => map.resize(), 50);
     });
 
-    // --- Add external GeoJSON layers directly when the map loads ---
-    map.on('load', function() {
-      // layer1
+    // Forgot password -> show contact card (English only)
+    if (forgotPasswordBtn) {
+      forgotPasswordBtn.addEventListener('click', () => {
+        infoText.innerHTML = `
+          <h3>Contact Support</h3>
+          <p>If you forgot your password, please contact the Back Office Engineer:</p>
+          <ul style="margin:4px 0 4px 18px;padding:0;font-size:0.95rem;">
+            <li>Name: Mohammed Muthanna</li>
+            <li>Email: mohammed.muthanna@outlook.com</li>
+            <li>Phone / WhatsApp: +9647838938382</li>
+          </ul>
+          <p style="margin:8px 0 0;font-size:0.9rem;color:#9ca3af;">
+            You will receive assistance to reset your account credentials.
+          </p>
+        `;
+        infoModal.style.display = 'flex';
+      });
+    }
+
+    if (closeInfoBtn) {
+      closeInfoBtn.addEventListener('click', () => {
+        infoModal.style.display = 'none';
+      });
+    }
+
+    infoModal.addEventListener('click', (e) => {
+      if (e.target === infoModal) {
+        infoModal.style.display = 'none';
+      }
+    });
+
+    // --- Map layers and logic ---
+    map.on('load', async function () {
+      // FATREG line layers (part1, part2, part3)
       map.addSource('layer1', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson'
       });
       map.addLayer({
         id: 'layer1',
@@ -189,10 +703,11 @@
           'line-width': 3
         }
       });
-      // layer2
+
       map.addSource('layer2', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson'
       });
       map.addLayer({
         id: 'layer2',
@@ -204,16 +719,17 @@
         }
       });
 
-    // Trigger navigation when Enter is pressed in coordinates input
-    document.getElementById('coordinates').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('navigate-btn').click();
-      }
-    });
-      // layer3
+      // Trigger navigation when Enter is pressed in coordinates input
+      document.getElementById('coordinates').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          document.getElementById('navigate-btn').click();
+        }
+      });
+
       map.addSource('layer3', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
       });
       map.addLayer({
         id: 'layer3',
@@ -224,68 +740,95 @@
           'line-width': 3
         }
       });
-  // Debug: click on a FATREG line to inspect its properties
-      ['layer1','layer2','layer3'].forEach(lid => {
+
+      // Debug: click on a FATREG line to inspect its properties
+      ['layer1', 'layer2', 'layer3'].forEach((lid) => {
         map.on('click', lid, (e) => {
           const f = e.features && e.features[0];
           if (!f) return;
           console.log('[FATREG line properties]', lid, f.properties);
           new mapboxgl.Popup({ offset: 12 })
             .setLngLat(e.lngLat)
-            .setHTML('<div style="max-width:260px;font-size:12px;direction:ltr;"><pre style="white-space:pre-wrap;margin:0">'+
-              (typeof f.properties === 'object' ? JSON.stringify(f.properties, null, 2) : String(f.properties)) +
-              '</pre></div>')
+            .setHTML(
+              '<div style="max-width:260px;font-size:12px;direction:ltr;"><pre style="white-space:pre-wrap;margin:0">' +
+                (typeof f.properties === 'object'
+                  ? JSON.stringify(f.properties, null, 2)
+                  : String(f.properties)) +
+                '</pre></div>'
+            )
             .addTo(map);
         });
       });
-  // Create centroid-based labels by fetching the FATREG GeoJSON directly
-     function buildCentroidsFromFeatures(fc) {
-  const points = [];
-  if (!fc || !Array.isArray(fc.features)) return { type: 'FeatureCollection', features: points };
 
-  fc.features.forEach(f => {
-    if (!f || !f.geometry) return;
-    const props = f.properties || {};
-    const keys = ['fat_id','FAT_ID','FAT','fat','fatid','Fat_ID','fatId','FATID','FatID',
-                  'fat_code','FAT_CODE','fatCode','id','ID','name','Name'];
-    let labelVal;
-    for (const k of keys) {
-      if (props[k] !== undefined && props[k] !== null && String(props[k]).trim() !== '') {
-        labelVal = props[k];
-        break;
+      // Build centroid-based labels by fetching the FATREG GeoJSON directly
+      function buildCentroidsFromFeatures(fc) {
+        const points = [];
+        if (!fc || !Array.isArray(fc.features)) return { type: 'FeatureCollection', features: points };
+
+        fc.features.forEach((f) => {
+          if (!f || !f.geometry) return;
+          const props = f.properties || {};
+          const keys = [
+            'fat_id',
+            'FAT_ID',
+            'FAT',
+            'fat',
+            'fatid',
+            'Fat_ID',
+            'fatId',
+            'FATID',
+            'FatID',
+            'fat_code',
+            'FAT_CODE',
+            'fatCode',
+            'id',
+            'ID',
+            'name',
+            'Name'
+          ];
+          let labelVal;
+          for (const k of keys) {
+            if (props[k] !== undefined && props[k] !== null && String(props[k]).trim() !== '') {
+              labelVal = props[k];
+              break;
+            }
+          }
+
+          // LineString
+          if (f.geometry.type === 'LineString') {
+            const line = turf.lineString(f.geometry.coordinates);
+            const lenKm = turf.length(line, { units: 'kilometers' });
+            const mid =
+              lenKm > 0
+                ? turf.along(line, lenKm / 2, { units: 'kilometers' })
+                : turf.point(f.geometry.coordinates[0]);
+            mid.properties = { ...props, fat_id: String(labelVal || '') };
+            points.push(mid);
+
+            // MultiLineString
+          } else if (f.geometry.type === 'MultiLineString') {
+            const first = f.geometry.coordinates && f.geometry.coordinates[0];
+            if (first && first.length >= 2) {
+              const line = turf.lineString(first);
+              const lenKm = turf.length(line, { units: 'kilometers' });
+              const mid =
+                lenKm > 0
+                  ? turf.along(line, lenKm / 2, { units: 'kilometers' })
+                  : turf.point(first[0]);
+              mid.properties = { ...props, fat_id: String(labelVal || '') };
+              points.push(mid);
+            }
+
+            // Polygon / MultiPolygon
+          } else if (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') {
+            const centroid = turf.centroid(f);
+            centroid.properties = { ...props, fat_id: String(labelVal || '') };
+            points.push(centroid);
+          }
+        });
+
+        return { type: 'FeatureCollection', features: points };
       }
-    }
-
-    // ✅ دعم LineString
-    if (f.geometry.type === 'LineString') {
-      const line = turf.lineString(f.geometry.coordinates);
-      const lenKm = turf.length(line, { units: 'kilometers' });
-      const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(f.geometry.coordinates[0]);
-      mid.properties = { ...props, fat_id: String(labelVal || '') };
-      points.push(mid);
-
-    // ✅ دعم MultiLineString
-    } else if (f.geometry.type === 'MultiLineString') {
-      const first = f.geometry.coordinates && f.geometry.coordinates[0];
-      if (first && first.length >= 2) {
-        const line = turf.lineString(first);
-        const lenKm = turf.length(line, { units: 'kilometers' });
-        const mid = lenKm > 0 ? turf.along(line, lenKm / 2, { units: 'kilometers' }) : turf.point(first[0]);
-        mid.properties = { ...props, fat_id: String(labelVal || '') };
-        points.push(mid);
-      }
-
-    // ✅ دعم Polygon و MultiPolygon
-    } else if (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') {
-      const centroid = turf.centroid(f);
-      centroid.properties = { ...props, fat_id: String(labelVal || '') };
-      points.push(centroid);
-    }
-  });
-
-  return { type: 'FeatureCollection', features: points };
-}
-
 
       async function addFatCentroidFromUrl(baseId, url) {
         const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
@@ -295,22 +838,37 @@
         const centroidSrcId = baseId + '-fat-centroids';
         const centroidLayerId = baseId + '-fat-centroid-label';
         const centroidDotLayerId = baseId + '-fat-centroid-dots';
+
         if (!map.getSource(centroidSrcId)) {
           map.addSource(centroidSrcId, { type: 'geojson', data });
         } else {
           map.getSource(centroidSrcId).setData(data);
         }
+
         if (!map.getLayer(centroidLayerId)) {
           map.addLayer({
             id: centroidLayerId,
             type: 'symbol',
             source: centroidSrcId,
             layout: {
-              'text-field': ['coalesce',
-                ['get','fat_id'], ['get','FAT_ID'], ['get','FAT'], ['get','fat'],
-                ['get','fatid'], ['get','Fat_ID'], ['get','fatId'], ['get','FATID'], ['get','FatID'],
-                ['get','fat_code'], ['get','FAT_CODE'], ['get','fatCode'],
-                ['get','id'], ['get','ID'], ['get','name'], ['get','Name'],
+              'text-field': [
+                'coalesce',
+                ['get', 'fat_id'],
+                ['get', 'FAT_ID'],
+                ['get', 'FAT'],
+                ['get', 'fat'],
+                ['get', 'fatid'],
+                ['get', 'Fat_ID'],
+                ['get', 'fatId'],
+                ['get', 'FATID'],
+                ['get', 'FatID'],
+                ['get', 'fat_code'],
+                ['get', 'FAT_CODE'],
+                ['get', 'fatCode'],
+                ['get', 'id'],
+                ['get', 'ID'],
+                ['get', 'name'],
+                ['get', 'Name'],
                 ''
               ],
               'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
@@ -318,7 +876,7 @@
               'text-offset': [0, 0.6],
               'text-anchor': 'center',
               'text-allow-overlap': true,
-              'text-ignore-placement': true,
+              'text-ignore-placement': true
             },
             paint: {
               'text-color': '#ffffff',
@@ -327,6 +885,7 @@
             }
           });
         }
+
         if (!map.getLayer(centroidDotLayerId)) {
           map.addLayer({
             id: centroidDotLayerId,
@@ -340,17 +899,22 @@
         }
       }
 
-  async function addFatCentroidLabelsFromUrls() {
+      async function addFatCentroidLabelsFromUrls() {
         const urls = {
-          layer1: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson',
-          layer2: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson',
-          layer3: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
+          layer1:
+            'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part1.geojson',
+          layer2:
+            'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part2.geojson',
+          layer3:
+            'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fatreg_part3.geojson'
         };
         try {
-          await Promise.all(Object.entries(urls).map(([id, url]) => addFatCentroidFromUrl(id, url)));
+          await Promise.all(
+            Object.entries(urls).map(([id, url]) => addFatCentroidFromUrl(id, url))
+          );
         } catch (e) {
           console.warn('Falling back to source-based centroid build due to fetch error:', e);
-          ['layer1', 'layer2', 'layer3'].forEach(srcId => {
+          ['layer1', 'layer2', 'layer3'].forEach((srcId) => {
             const src = map.getSource(srcId);
             if (!src) return;
             const fc = src._data || (src._options ? src._options.data : null);
@@ -358,25 +922,83 @@
             const centroidSrcId = srcId + '-fat-centroids';
             const centroidLayerId = srcId + '-fat-centroid-label';
             const centroidDotLayerId = srcId + '-fat-centroid-dots';
-            if (!map.getSource(centroidSrcId)) map.addSource(centroidSrcId, { type: 'geojson', data }); else map.getSource(centroidSrcId).setData(data);
+
+            if (!map.getSource(centroidSrcId))
+              map.addSource(centroidSrcId, { type: 'geojson', data });
+            else map.getSource(centroidSrcId).setData(data);
+
             if (!map.getLayer(centroidLayerId)) {
-              map.addLayer({ id: centroidLayerId, type: 'symbol', source: centroidSrcId, layout: { 'text-field': ['coalesce', ['get','fat_id'], ['get','FAT_ID'], ['get','FAT'], ['get','fat'], ['get','fatid'], ['get','Fat_ID'], ['get','fatId'], ['get','FATID'], ['get','FatID'], ['get','fat_code'], ['get','FAT_CODE'], ['get','fatCode'], ['get','id'], ['get','ID'], ['get','name'], ['get','Name'], '' ], 'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'], 'text-size': 16, 'text-offset': [0, 0.6], 'text-anchor': 'top', 'text-allow-overlap': true, 'text-ignore-placement': true }, paint: { 'text-color': '#ffffff', 'text-halo-color': '#000000', 'text-halo-width': 2.5 } });
+              map.addLayer({
+                id: centroidLayerId,
+                type: 'symbol',
+                source: centroidSrcId,
+                layout: {
+                  'text-field': [
+                    'coalesce',
+                    ['get', 'fat_id'],
+                    ['get', 'FAT_ID'],
+                    ['get', 'FAT'],
+                    ['get', 'fat'],
+                    ['get', 'fatid'],
+                    ['get', 'Fat_ID'],
+                    ['get', 'fatId'],
+                    ['get', 'FATID'],
+                    ['get', 'FatId'],
+                    ['get', 'fat_code'],
+                    ['get', 'FAT_CODE'],
+                    ['get', 'fatCode'],
+                    ['get', 'id'],
+                    ['get', 'ID'],
+                    ['get', 'name'],
+                    ['get', 'Name'],
+                    ''
+                  ],
+                  'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+                  'text-size': 16,
+                  'text-offset': [0, 0.6],
+                  'text-anchor': 'top',
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true
+                },
+                paint: {
+                  'text-color': '#ffffff',
+                  'text-halo-color': '#000000',
+                  'text-halo-width': 2.5
+                }
+              });
             }
+
             if (!map.getLayer(centroidDotLayerId)) {
-              map.addLayer({ id: centroidDotLayerId, type: 'circle', source: centroidSrcId, paint: { 'circle-radius': 4, 'circle-color': '#00e5ff' } });
+              map.addLayer({
+                id: centroidDotLayerId,
+                type: 'circle',
+                source: centroidSrcId,
+                paint: {
+                  'circle-radius': 4,
+                  'circle-color': '#00e5ff'
+                }
+              });
             }
           });
         } finally {
           // Hide any existing line-placement labels if present
-          ['layer1-label', 'layer2-label', 'layer3-label'].forEach(lid => {
+          ['layer1-label', 'layer2-label', 'layer3-label'].forEach((lid) => {
             if (map.getLayer(lid)) map.setLayoutProperty(lid, 'visibility', 'none');
           });
           // Ensure centroid layers render on top of all other layers
-          const moveToTop = (id) => { try { if (map.getLayer(id)) map.moveLayer(id); } catch (_) {} };
-          ['layer1-fat-centroid-dots','layer1-fat-centroid-label',
-           'layer2-fat-centroid-dots','layer2-fat-centroid-label',
-           'layer3-fat-centroid-dots','layer3-fat-centroid-label']
-            .forEach(moveToTop);
+          const moveToTop = (id) => {
+            try {
+              if (map.getLayer(id)) map.moveLayer(id);
+            } catch (_) {}
+          };
+          [
+            'layer1-fat-centroid-dots',
+            'layer1-fat-centroid-label',
+            'layer2-fat-centroid-dots',
+            'layer2-fat-centroid-label',
+            'layer3-fat-centroid-dots',
+            'layer3-fat-centroid-label'
+          ].forEach(moveToTop);
 
           // Debug: click centroid to see its label value
           const attachDebug = (id) => {
@@ -384,27 +1006,44 @@
             map.on('click', id, (e) => {
               const f = e.features && e.features[0];
               if (!f) return;
-              const val = f.properties && (f.properties.fat_id || f.properties.FAT_ID || f.properties.FAT || f.properties.id || f.properties.name || '');
+              const props = f.properties || {};
+              const val =
+                props.fat_id ||
+                props.FAT_ID ||
+                props.FAT ||
+                props.id ||
+                props.name ||
+                '';
               new mapboxgl.Popup({ offset: 12 })
                 .setLngLat(e.lngLat)
-                .setHTML(`<div style="font-size:12px">fat_id: <b>${val}</b></div>`)
+                .setHTML(
+                  `<div style="font-size:12px">fat_id: <b>${val}</b></div>`
+                )
                 .addTo(map);
               console.log('[centroid properties]', f.properties);
             });
           };
-          ['layer1-fat-centroid-dots','layer1-fat-centroid-label',
-           'layer2-fat-centroid-dots','layer2-fat-centroid-label',
-           'layer3-fat-centroid-dots','layer3-fat-centroid-label']
-            .forEach(attachDebug);
+          [
+            'layer1-fat-centroid-dots',
+            'layer1-fat-centroid-label',
+            'layer2-fat-centroid-dots',
+            'layer2-fat-centroid-label',
+            'layer3-fat-centroid-dots',
+            'layer3-fat-centroid-label'
+          ].forEach(attachDebug);
         }
       }
 
-  // Build centroid labels after the map is idle (ensures top rendering)
-  map.once('idle', function() { addFatCentroidLabelsFromUrls(); });
-      // New layers in orange color
+      // Build centroid labels after the map is idle (ensures top rendering)
+      map.once('idle', function () {
+        addFatCentroidLabelsFromUrls();
+      });
+
+      // FAT points (orange) - three parts
       map.addSource('fats_part1', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part1%20(1).geojson'
       });
       map.addLayer({
         id: 'fats_part1',
@@ -433,9 +1072,11 @@
           'text-halo-width': 2
         }
       });
+
       map.addSource('fats_part2', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part2%20(1).geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part2%20(1).geojson'
       });
       map.addLayer({
         id: 'fats_part2',
@@ -464,9 +1105,11 @@
           'text-halo-width': 2
         }
       });
+
       map.addSource('fats_part3', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part3.geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//fats_part3.geojson'
       });
       map.addLayer({
         id: 'fats_part3',
@@ -496,21 +1139,21 @@
         }
       });
 
-      // Add zonename.geojson layer
+      // Zone layer
       map.addSource('zoneLayer', {
         type: 'geojson',
-        data: 'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
+        data:
+          'https://hkzfxpqjrwyxetsjdjor.supabase.co/storage/v1/object/public/geojson-files//zonename.geojson'
       });
       map.addLayer({
         id: 'zoneLayer-fill',
         type: 'fill',
         source: 'zoneLayer',
         paint: {
-          'fill-color': '#ffd54f', // لون ذهبي
+          'fill-color': '#ffd54f',
           'fill-opacity': 0.4
         }
       });
-      // Add zone boundaries
       map.addLayer({
         id: 'zoneLayer-outline',
         type: 'line',
@@ -520,13 +1163,12 @@
           'line-width': 2
         }
       });
-      // Add zone name label layer
       map.addLayer({
         id: 'zoneLayer-label',
         type: 'symbol',
         source: 'zoneLayer',
         layout: {
-          'text-field': ['get', 'zone_id'], // changed to use zone_id
+          'text-field': ['get', 'zone_id'],
           'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 16,
           'text-anchor': 'center'
@@ -537,38 +1179,50 @@
           'text-halo-width': 2
         }
       });
+
+      // Preload data for FAT search + sidebar
+      preloadStaticData();
     });
 
-  // Load saved layers from Supabase when the page loads
+    // Load saved layers from Supabase when the page loads (if enabled)
     async function loadSavedLayers() {
       if (!ENABLE_SUPABASE_LAYERS) return;
       const { data, error } = await supabase.from('layers').select('*');
       if (error) {
-        console.error('خطأ في تحميل الطبقات:', error.message);
+        console.error('Error loading layers:', error.message);
         return;
       }
       if (data && Array.isArray(data)) {
-        data.forEach(layer => {
+        data.forEach((layer) => {
           try {
-            // If geojson is a string, parse it to object
             let geojson = layer.geojson;
             if (typeof geojson === 'string') geojson = JSON.parse(geojson);
-            // Add layer to map
+
             map.addSource(layer.name, {
               type: 'geojson',
               data: geojson
             });
             map.addLayer({
               id: layer.name,
-              type: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? 'circle' : 'line',
+              type:
+                geojson.features &&
+                geojson.features[0] &&
+                geojson.features[0].geometry.type === 'Point'
+                  ? 'circle'
+                  : 'line',
               source: layer.name,
-              paint: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? {
-                'circle-radius': 7,
-                'circle-color': '#FF5733'
-              } : {
-                'line-color': '#007BFF',
-                'line-width': 3
-              }
+              paint:
+                geojson.features &&
+                geojson.features[0] &&
+                geojson.features[0].geometry.type === 'Point'
+                  ? {
+                      'circle-radius': 7,
+                      'circle-color': '#FF5733'
+                    }
+                  : {
+                      'line-color': '#007BFF',
+                      'line-width': 3
+                    }
             });
           } catch (err) {
             console.error('Error adding saved layer:', err);
@@ -577,15 +1231,14 @@
       }
     }
 
-  // Load layers when map loads (optional)
     if (ENABLE_SUPABASE_LAYERS) {
       map.on('load', loadSavedLayers);
     }
 
     // Resize handle functionality
-  const resizeHandle = document.querySelector('.resize-handle');
-  const mapElement = document.getElementById('map');
-  const container = document.getElementById('main-container');
+    const resizeHandle = document.querySelector('.resize-handle');
+    const mapElement = document.getElementById('map');
+    const container = document.getElementById('main-container');
     let isResizing = false;
 
     resizeHandle.addEventListener('mousedown', function (e) {
@@ -617,17 +1270,138 @@
       document.removeEventListener('mouseup', stopResize);
     }
 
+    // --- Helpers for FAT & Zone info ---
+    function getProps(obj) {
+      return obj && obj.properties ? obj.properties : {};
+    }
 
-    // Modal (Info) window handling (remove info-btn code since it doesn't exist)
-  // Info modal placeholder removed (not used)
+    function getFatIdFromProps(props) {
+      return (
+        props.fat_id ||
+        props.FAT_ID ||
+        props.FAT ||
+        props.fat ||
+        props.fatid ||
+        props.id ||
+        ''
+      );
+    }
 
-    // Navigate button: moves map to entered coordinates
-    document.getElementById('navigate-btn').addEventListener('click', function() {
+    function getZoneIdFromProps(props) {
+      return props.zone_id || props.ZONE_ID || props.zone || props.ZONE || '';
+    }
+
+    function updateSidebarForZone(zoneIdRaw) {
+      const sidebar = document.getElementById('sidebar');
+      const list = document.getElementById('pole-list');
+      const heading = sidebar.querySelector('h3');
+
+      if (!zoneIdRaw) {
+        sidebar.style.display = 'none';
+        list.innerHTML = '';
+        return;
+      }
+
+      const zoneIdUpper = String(zoneIdRaw).toUpperCase();
+      heading.textContent = 'FATs in Zone ' + zoneIdUpper;
+
+      const fatsInZone = fatFeatures.filter(({ feature }) => {
+        const p = getProps(feature);
+        const z = getZoneIdFromProps(p);
+        return z && z.toUpperCase() === zoneIdUpper;
+      });
+
+      list.innerHTML = '';
+      if (!fatsInZone.length) {
+        const li = document.createElement('li');
+        li.textContent = 'No FATs found in this zone.';
+        li.style.cursor = 'default';
+        list.appendChild(li);
+        sidebar.style.display = 'block';
+        return;
+      }
+
+      fatsInZone.forEach(({ layerId, feature }) => {
+        const props = getProps(feature);
+        const fatId = getFatIdFromProps(props);
+        const coords = feature.geometry && feature.geometry.coordinates;
+
+        const li = document.createElement('li');
+        li.textContent = fatId ? `FAT ${fatId} (${layerId})` : `FAT (${layerId})`;
+        li.addEventListener('click', () => {
+          if (Array.isArray(coords)) {
+            const [lng, lat] = coords;
+            map.flyTo({ center: [lng, lat], zoom: 18 });
+            showFatPopup(lng, lat, {
+              fat_id: fatId,
+              zone_id: zoneIdRaw,
+              layer: layerId
+            });
+          }
+        });
+        list.appendChild(li);
+      });
+
+      sidebar.style.display = 'block';
+    }
+
+    function showFatPopup(lng, lat, info) {
+      if (window.searchMarker) {
+        window.searchMarker.remove();
+      }
+      const html = `
+        <div style="min-width:220px;max-width:280px;color:#0f172a;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;">
+          <div style="font-weight:600;font-size:14px;margin-bottom:6px;">FAT Information</div>
+          <div><strong>FAT ID:</strong> ${info.fat_id || '-'}</div>
+          <div><strong>Zone:</strong> ${info.zone_id || '-'}</div>
+          <div><strong>Layer:</strong> ${info.layer || '-'}</div>
+          <div style="margin-top:8px;font-size:12px;color:#64748b;">
+            ${lat.toFixed(6)}, ${lng.toFixed(6)}
+          </div>
+        </div>
+      `;
+      window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
+        .setLngLat([lng, lat])
+        .setPopup(new mapboxgl.Popup({ offset: 18 }).setHTML(html))
+        .addTo(map);
+      window.searchMarker.getPopup().addTo(map);
+    }
+
+    function searchFatsByTokens(tokens) {
+      const upperTokens = tokens.map((t) => t.toUpperCase());
+      const results = [];
+
+      fatFeatures.forEach(({ layerId, feature }) => {
+        const props = getProps(feature);
+        const z = (getZoneIdFromProps(props) || '').toUpperCase();
+        const fId = (getFatIdFromProps(props) || '').toUpperCase();
+        if (!z && !fId) return;
+
+        const matchesAll = upperTokens.every((tok) => {
+          return z.includes(tok) || fId.includes(tok);
+        });
+
+        if (matchesAll) {
+          results.push({
+            layer: layerId,
+            feature,
+            zone_id: z,
+            fat_id: fId
+          });
+        }
+      });
+
+      return results;
+    }
+
+    // --- Navigate button: moves map to entered coordinates + improved popup ---
+    document.getElementById('navigate-btn').addEventListener('click', function () {
       const coordInput = document.getElementById('coordinates').value.trim();
-      // يقبل جميع صيغ الإحداثيات
+
       let lat, lng;
       let cleaned = coordInput.replace(/[^\d.\-]+/g, ',');
       let parts = cleaned.split(',').filter(Boolean);
+
       if (parts.length === 2) {
         let a = Number(parts[0]);
         let b = Number(parts[1]);
@@ -639,78 +1413,69 @@
           lat = b;
         }
       }
+
       if (!isNaN(lat) && !isNaN(lng)) {
         map.flyTo({ center: [lng, lat], zoom: 17 });
-        // البحث عن أقرب FATs
-        let nearestFats = [];
-        const fatSources = ['fats_part1', 'fats_part2', 'fats_part3'];
-        for (let src of fatSources) {
-          const source = map.getSource(src);
-          let features = source && source._data ? (source._data.features || source._data.features) : [];
-          if (features && Array.isArray(features)) {
-            features.forEach(feature => {
-              if (feature.geometry && feature.geometry.type === 'Point') {
-                const pt = turf.point([lng, lat]);
-                const fatPt = turf.point(feature.geometry.coordinates);
-                const dist = turf.distance(pt, fatPt, { units: 'meters' });
-                // Ensure properties exist
-                let fat_id = feature.properties ? (feature.properties.fat_id || feature.properties.FAT_ID || feature.properties.id) : '';
-                let zone_id = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.zone) : '';
-                nearestFats.push({
-                  fat_id: fat_id,
-                  zone_id: zone_id,
-                  layer: src,
-                  dist: dist
-                });
-              }
-            });
-          }
-        }
-        nearestFats.sort((a, b) => a.dist - b.dist);
-        let fatsHtml = '';
-        if (nearestFats.length > 0) {
-          fatsHtml += `<strong>أقرب FATs:</strong><ul style='margin:0;padding-left:18px;'>`;
-          nearestFats.slice(0, 3).forEach(fat => {
-            fatsHtml += `<li>FAT: <b>${fat.fat_id}</b> (Zone: ${fat.zone_id || '-'} | طبقة: ${fat.layer}) <span style='color:#888;'>[${fat.dist.toFixed(1)}m]</span></li>`;
-          });
-          fatsHtml += `</ul>`;
-        }
-        // لا تكرر رسالة "لا يوجد FATs قريبة" مرتين، فقط في حالة عدم وجود أي FAT قريب
 
-        // البحث عن طبقة المنطقة
+        const pt = turf.point([lng, lat]);
+
+        // Nearest FATs using preloaded fatFeatures
+        let nearestFats = [];
+        fatFeatures.forEach(({ layerId, feature }) => {
+          if (!feature.geometry || feature.geometry.type !== 'Point') return;
+          const fatPt = turf.point(feature.geometry.coordinates);
+          const dist = turf.distance(pt, fatPt, { units: 'meters' });
+          const props = getProps(feature);
+          const fat_id = getFatIdFromProps(props);
+          const zone_id = getZoneIdFromProps(props);
+          nearestFats.push({
+            fat_id,
+            zone_id,
+            layer: layerId,
+            dist,
+            coords: feature.geometry.coordinates
+          });
+        });
+
+        nearestFats.sort((a, b) => a.dist - b.dist);
+
+        // Zone detection using preloaded zoneFeatures
         let zoneName = '';
-        const zoneSource = map.getSource('zoneLayer');
-        let zoneFeatures = zoneSource && zoneSource._data ? (zoneSource._data.features || zoneSource._data.features) : [];
-        if (zoneFeatures && Array.isArray(zoneFeatures)) {
+        if (Array.isArray(zoneFeatures) && zoneFeatures.length) {
           for (let feature of zoneFeatures) {
-            if (feature.geometry && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
+            if (
+              feature.geometry &&
+              (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')
+            ) {
               if (turf.booleanPointInPolygon([lng, lat], feature)) {
-                zoneName = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.name || feature.properties.id) : '';
+                const props = getProps(feature);
+                zoneName =
+                  props.zone_id || props.ZONE_ID || props.name || props.id || '';
                 break;
               }
             }
           }
         }
 
-        // البحث عن أقرب خط (كما كان سابقاً)
+        // Nearest line info (from original line sources)
         let foundInfo = null;
-        const sources = ['layer1', 'layer2', 'layer3'];
-        for (let src of sources) {
+        const lineSources = ['layer1', 'layer2', 'layer3'];
+        for (let src of lineSources) {
           const source = map.getSource(src);
-          let features = source && source._data ? (source._data.features || source._data.features) : [];
+          let features = source && source._data ? source._data.features : [];
           if (features && Array.isArray(features)) {
             for (let feature of features) {
               if (feature.geometry && feature.geometry.type === 'LineString') {
-                const pt = turf.point([lng, lat]);
                 const line = turf.lineString(feature.geometry.coordinates);
                 const dist = turf.pointToLineDistance(pt, line, { units: 'meters' });
                 if (dist < 20) {
-                  let fat_id = feature.properties ? (feature.properties.fat_id || feature.properties.FAT_ID || feature.properties.id) : '';
-                  let zone_id = feature.properties ? (feature.properties.zone_id || feature.properties.ZONE_ID || feature.properties.zone) : '';
+                  const props = getProps(feature);
+                  let fat_id = getFatIdFromProps(props);
+                  let zone_id = getZoneIdFromProps(props);
                   foundInfo = {
                     layer: src,
-                    fat_id: fat_id,
-                    zone_id: zone_id
+                    fat_id,
+                    zone_id
                   };
                   break;
                 }
@@ -720,59 +1485,122 @@
           if (foundInfo) break;
         }
 
-        // Info window (English only)
         if (window.searchMarker) {
           window.searchMarker.remove();
         }
-        let infoHtml = `<div style='color:black;'>`;
-        infoHtml += `<strong>Location:</strong> ${lat}, ${lng}<br>`;
-        infoHtml += `<strong>Zone Layer:</strong> ${zoneName ? zoneName : 'Outside any zone'}<br>`;
+
+        let primaryLayer = '-';
         if (foundInfo && foundInfo.layer) {
-          infoHtml += `<strong>Layer Name:</strong> ${foundInfo.layer}<br>`;
+          primaryLayer = foundInfo.layer;
         } else if (nearestFats.length > 0) {
-          infoHtml += `<strong>Layer Name:</strong> ${nearestFats[0].layer}<br>`;
+          primaryLayer = nearestFats[0].layer;
         }
+
+        let infoHtml = `
+          <div style="min-width:230px;max-width:280px;color:#0f172a;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Location Info</div>
+            <div><strong>Coordinates:</strong> ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
+            <div><strong>Zone:</strong> ${zoneName || 'Outside any zone'}</div>
+            <div><strong>Line layer:</strong> ${primaryLayer}</div>
+        `;
+
         if (nearestFats.length > 0) {
           const nearest = nearestFats[0];
-          infoHtml += `<br><strong>Nearest FAT:</strong> <b>${nearest.fat_id}</b> (Zone: ${nearest.zone_id || '-'} | Layer: ${nearest.layer}) <span style='color:#888;'>[${nearest.dist.toFixed(1)}m]</span><br>`;
-        } else {
-          infoHtml += `<br><strong>No nearby FATs found.</strong><br>`;
-        }
-        infoHtml += `<br><hr style='margin:7px 0;'>`;
-        if (nearestFats.length > 0) {
-          infoHtml += `<strong>Nearest FATs:</strong><ul style='margin:0;padding-left:18px;'>`;
-          nearestFats.slice(0, 3).forEach(fat => {
-            infoHtml += `<li>FAT: <b>${fat.fat_id}</b> (Zone: ${fat.zone_id || '-'} | Layer: ${fat.layer}) <span style='color:#888;'>[${fat.dist.toFixed(1)}m]</span></li>`;
+          infoHtml += `
+            <div style="margin-top:6px;"><strong>Nearest FAT:</strong> <b>${nearest.fat_id ||
+              '-'}</b></div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:4px;">
+              Zone: ${nearest.zone_id || '-'} | Layer: ${nearest.layer} | Distance: ${nearest.dist.toFixed(
+            1
+          )} m
+            </div>
+            <div style="margin-top:4px;font-weight:600;">Nearest FATs</div>
+            <ul style="margin:2px 0 0 18px;padding:0;font-size:12px;">
+          `;
+          nearestFats.slice(0, 3).forEach((fat) => {
+            infoHtml += `
+              <li>FAT <b>${fat.fat_id || '-'}</b> (Zone: ${fat.zone_id ||
+              '-'} | Layer: ${fat.layer}) <span style="color:#94a3b8;">[${fat.dist.toFixed(
+              1
+            )} m]</span></li>
+            `;
           });
           infoHtml += `</ul>`;
+        } else {
+          infoHtml += `
+            <div style="margin-top:6px;">No nearby FATs found.</div>
+          `;
         }
+
         infoHtml += `</div>`;
+
         window.searchMarker = new mapboxgl.Marker({ color: '#FF5733' })
           .setLngLat([lng, lat])
-          .setPopup(new mapboxgl.Popup({ offset: 25 })
-            .setHTML(infoHtml))
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(infoHtml))
           .addTo(map);
         window.searchMarker.getPopup().addTo(map);
+
+        // Update sidebar with FATs for detected zone
+        if (zoneName) {
+          updateSidebarForZone(zoneName);
+        } else {
+          updateSidebarForZone(null);
+        }
       } else {
-        alert('Please enter valid coordinates in any format, e.g.: 33.294526, 44.430290 or 33.294526 44.430290 or 44.430290;33.294526');
+        alert(
+          'Please enter valid coordinates in any format, e.g.: 33.294526, 44.430290 or 33.294526 44.430290 or 44.430290;33.294526'
+        );
       }
     });
 
-    // Search FAT button: searches for FAT and shows a message (can be improved later)
-  document.getElementById('search-btn').addEventListener('click', function() {
-      const searchVal = document.getElementById('fat-search').value.trim();
-      if (!searchVal) {
-        alert('Please enter Zone_ID and FAT# to search.');
+    // Search FAT button: now real search using FAT + Zone
+    document.getElementById('search-btn').addEventListener('click', function () {
+      const raw = document.getElementById('fat-search').value.trim();
+      if (!raw) {
+        alert('Please enter Zone and FAT to search, e.g. Z12 FAT123.');
         return;
       }
-      // Example: Z12 FAT123
-      // You can implement search in database or map layers here
-      alert('Searched for: ' + searchVal + '\n(You can improve the search later)');
+
+      if (!fatFeatures.length) {
+        alert('FAT data is still loading. Please try again in a moment.');
+        return;
+      }
+
+      const tokens = raw
+        .split(/[\s,;]+/)
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      const results = searchFatsByTokens(tokens);
+      if (!results.length) {
+        alert('No FAT found for this search.');
+        return;
+      }
+
+      const first = results[0];
+      const coords = first.feature.geometry && first.feature.geometry.coordinates;
+      if (!coords || !Array.isArray(coords)) {
+        alert('FAT found but coordinates are invalid.');
+        return;
+      }
+
+      const [lng, lat] = coords;
+      map.flyTo({ center: [lng, lat], zoom: 18 });
+
+      showFatPopup(lng, lat, {
+        fat_id: first.fat_id,
+        zone_id: first.zone_id,
+        layer: first.layer
+      });
+
+      if (first.zone_id) {
+        updateSidebarForZone(first.zone_id);
+      }
     });
 
     // Right-click event to show coordinates and copy them
     let currentCoordsPopup = null;
-    map.on('contextmenu', function(e) {
+    map.on('contextmenu', function (e) {
       e.originalEvent.preventDefault();
       if (currentCoordsPopup) currentCoordsPopup.remove();
       const lng = e.lngLat.lng.toFixed(6);
@@ -789,7 +1617,7 @@
         .setDOMContent(popupContent)
         .addTo(map);
       const copyButton = popupContent.querySelector('#copy-coords-btn');
-      copyButton.addEventListener('click', function() {
+      copyButton.addEventListener('click', function () {
         const tempInput = document.createElement('input');
         tempInput.value = coordsString;
         document.body.appendChild(tempInput);
@@ -802,74 +1630,83 @@
           currentCoordsPopup = null;
         }, 1000);
       });
-      currentCoordsPopup.on('close', () => currentCoordsPopup = null);
+      currentCoordsPopup.on('close', () => (currentCoordsPopup = null));
     });
 
-    // --- Add button to upload GeoJSON layer and save it in Supabase ---
-  const geojsonInput = document.getElementById('geojson-input');
-  const addLayerBtn = document.getElementById('add-layer-btn');
-  const saveLayersBtn = document.getElementById('save-layers-btn');
+    // --- Add button to upload GeoJSON layer and save it in Supabase (optional feature) ---
+    const geojsonInput = document.getElementById('geojson-input');
+    const addLayerBtn = document.getElementById('add-layer-btn');
+    const saveLayersBtn = document.getElementById('save-layers-btn');
     let loadedLayers = [];
 
-  // (Removed duplicate Supabase and old overlay login code)
+    if (addLayerBtn && ENABLE_SUPABASE_LAYERS)
+      addLayerBtn.addEventListener('click', () => {
+        geojsonInput.value = '';
+        geojsonInput.click();
+      });
 
-  if (addLayerBtn && ENABLE_SUPABASE_LAYERS) addLayerBtn.addEventListener('click', () => {
-      geojsonInput.value = '';
-      geojsonInput.click();
-  });
+    if (ENABLE_SUPABASE_LAYERS)
+      geojsonInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const geojson = JSON.parse(e.target.result);
+            const layerId = 'layer_' + Date.now();
+            map.addSource(layerId, {
+              type: 'geojson',
+              data: geojson
+            });
+            map.addLayer({
+              id: layerId,
+              type:
+                geojson.features &&
+                geojson.features[0] &&
+                geojson.features[0].geometry.type === 'Point'
+                  ? 'circle'
+                  : 'line',
+              source: layerId,
+              paint:
+                geojson.features &&
+                geojson.features[0] &&
+                geojson.features[0].geometry.type === 'Point'
+                  ? {
+                      'circle-radius': 7,
+                      'circle-color': '#FF5733'
+                    }
+                  : {
+                      'line-color': '#007BFF',
+                      'line-width': 3
+                    }
+            });
+            loadedLayers.push({ id: layerId, data: geojson });
+            alert('Layer added successfully!');
+          } catch (err) {
+            alert('Invalid GeoJSON file!');
+          }
+        };
+        reader.readAsText(file);
+      });
 
-  if (ENABLE_SUPABASE_LAYERS) geojsonInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const geojson = JSON.parse(e.target.result);
-          const layerId = 'layer_' + Date.now();
-          // إضافة الطبقة للخريطة
-          map.addSource(layerId, {
-            type: 'geojson',
-            data: geojson
-          });
-          map.addLayer({
-            id: layerId,
-            type: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? 'circle' : 'line',
-            source: layerId,
-            paint: geojson.features && geojson.features[0] && geojson.features[0].geometry.type === 'Point' ? {
-              'circle-radius': 7,
-              'circle-color': '#FF5733'
-            } : {
-              'line-color': '#007BFF',
-              'line-width': 3
-            }
-          });
-          loadedLayers.push({ id: layerId, data: geojson });
-          alert('Layer added successfully!');
-        } catch (err) {
-          alert('Invalid GeoJSON file!');
-        }
-      };
-      reader.readAsText(file);
-    });
-
-  if (saveLayersBtn && ENABLE_SUPABASE_LAYERS) saveLayersBtn.addEventListener('click', async () => {
-      if (loadedLayers.length === 0) {
-        alert('No layers to save!');
-        return;
-      }
-      for (const layer of loadedLayers) {
-        // حفظ كل طبقة في جدول اسمه "layers" في supabase
-        const { data, error } = await supabase.from('layers').insert([
-          { name: layer.id, geojson: layer.data }
-        ]);
-        if (error) {
-          alert('Error saving layer: ' + error.message);
+    if (saveLayersBtn && ENABLE_SUPABASE_LAYERS)
+      saveLayersBtn.addEventListener('click', async () => {
+        if (loadedLayers.length === 0) {
+          alert('No layers to save!');
           return;
         }
-      }
-      alert('All layers saved to the database!');
-      loadedLayers = [];
-    });
+        for (const layer of loadedLayers) {
+          const { data, error } = await supabase.from('layers').insert([
+            { name: layer.id, geojson: layer.data }
+          ]);
+          if (error) {
+            alert('Error saving layer: ' + error.message);
+            return;
+          }
+        }
+        alert('All layers saved to the database!');
+        loadedLayers = [];
+      });
   </script>
 </body>
 </html>
