@@ -566,7 +566,7 @@
                         <input type="checkbox" />
                         <span>Remember me</span>
                     </label>
-                    <a href="javascript:void(0);">Forgot password?</a>
+      <a href="javascript:void(0);" onclick="openContactModal()">Forgot password?</a>
                 </div>
 
                 <button type="submit" id="login-btn">
@@ -776,6 +776,24 @@
     <div id="copy-success">
         <span style="font-size:1.5em;vertical-align:middle;">✔️</span> تم النسخ
     </div>
+    
+    <!-- Modal: Contact Info -->
+<div id="contact-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width:600px; min-width:400px;">
+        <button class="modal-close-btn" onclick="closeContactModal()">&times;</button>
+        <h3>Contact Support</h3>
+
+        <div style="font-size:1.2rem; color:#fff; margin-top:20px; line-height:1.8;">
+            <b>Name:</b> Mohammed Muthanna <br>
+            <b>Email:</b> muhmuthana@earthlink.iq <br>
+            <b>Phone:</b> +964 07838938382 <br><br>
+
+            If you need to reset your password or recover your account,  
+            please contact the Back Office support engineer using the information above.
+        </div>
+    </div>
+</div>
+
 
     <!-- ========== Supabase ========== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -1049,6 +1067,16 @@
             emailTemplates.classList.add('hidden');
             mainButtons.classList.remove('hidden');
         }
+       
+       function openContactModal() {
+    document.getElementById('contact-modal').classList.add('show');
+}
+
+function closeContactModal() {
+    document.getElementById('contact-modal').classList.remove('show');
+}
+
+
     </script>
 </body>
 </html>
