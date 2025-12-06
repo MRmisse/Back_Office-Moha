@@ -1,10 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Back Office Engineer</title>
+
+    <!-- Modal styles -->
     <style>
+        /* Modal styles - modern, larger, matching page design */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(34, 58, 94, 0.55);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #192d61 0%, #223a5e 100%);
+            border-radius: 24px;
+            box-shadow: 0 12px 48px #16244799, 0 2px 8px #223a5e;
+            padding: 44px 64px 36px 64px;
+            min-width: 1100px;
+            max-width: 1100px;
+            width: 70vw;
+            max-height: 88vh;
+            overflow-y: auto;
+            text-align: center;
+            position: relative;
+            color: #f5f6fa;
+        }
+        @media (max-width: 700px) {
+            .modal-content {
+                min-width: 90vw;
+                padding: 18px 6vw 18px 6vw;
+            }
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #f5f6fa;
+            font-size: 2.1em;
+            margin-bottom: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            border-radius: 12px;
+            padding: 12px 0;
+        }
+        .modal-content textarea {
+            width: 100%;
+            min-height: 260px;
+            font-size: 1.25em;
+            margin-bottom: 18px;
+            direction: ltr;
+            resize: vertical;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.13);
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(78,84,200,0.08);
+            padding: 16px;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 18px;
+            right: 24px;
+            background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 10px rgba(255,88,88,0.10);
+        }
+        .modal-close-btn:hover {
+            background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        /* Main page styles */
         body {
             background: linear-gradient(135deg, #192d61 0%, #223a5e 100%);
             font-family: 'Cairo', Arial, sans-serif;
@@ -21,85 +103,172 @@
             letter-spacing: 2px;
             text-shadow: 0 2px 8px #16244799, 0 1px 0 #223a5e;
         }
+        #user-info {
+            text-align: center;
+            margin-top: 6px;
+            color: #e5e7eb;
+            font-size: 0.9rem;
+        }
+        :root {
+            --bg-start: #192d61;
+            --bg-end: #223a5e;
+            --btn-bg-start: #3b82f6;
+            --btn-bg-end: #06b6d4;
+            --btn-text: #ffffff;
+            --btn-hover-start: #2563eb;
+            --btn-hover-end: #0891b2;
+            --btn-shadow: 0 6px 18px rgba(59,130,246,0.25);
+            --btn-shadow-hover: 0 10px 28px rgba(6,182,212,0.28);
+            --ring: 0 0 0 3px rgba(59,130,246,0.35);
+            --radius: 16px;
+        }
         .container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
             justify-content: center;
             align-items: start;
-            margin: 60px auto 0 auto;
-            max-width: 1100px;
-            width: 95%;
+            margin: 64px auto 0 auto;
+            max-width: 1200px;
+            width: min(96%, 1200px);
         }
-        h1 {
-            color: #3a4d6b;
-            margin-bottom: 30px;
-        }
-        button, .dropbtn {
-            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
-            color: white;
-            border: none;
-            border-radius: 18px;
-            padding: 18px 0;
+        /* Unified modern button style */
+        button, .button, .dropbtn {
+            appearance: none;
+            background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+            color: var(--btn-text);
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            padding: 14px 16px;
             margin: 0;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
+            line-height: 1.2;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 10px rgba(78,84,200,0.08);
+            transition: background 180ms ease, transform 160ms ease, box-shadow 160ms ease, border-color 180ms ease;
+            box-shadow: var(--btn-shadow);
             width: 100%;
             min-width: 0;
             font-family: inherit;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            user-select: none;
         }
-        button:hover, .dropbtn:hover {
-            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 6px 18px rgba(78,84,200,0.13);
+        button:hover, .button:hover, .dropbtn:hover {
+            background: linear-gradient(135deg, var(--btn-hover-start), var(--btn-hover-end));
+            transform: translateY(-2px);
+            box-shadow: var(--btn-shadow-hover);
         }
+        button:active, .button:active, .dropbtn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+        }
+        button:focus-visible, .button:focus-visible, .dropbtn:focus-visible {
+            outline: none;
+            box-shadow: var(--btn-shadow-hover), var(--ring);
+        }
+        button:disabled, .button:disabled, .dropbtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Login card */
         .login-box {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            max-width: 440px;
+            margin: 56px auto 0;
+            padding: 28px 26px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
+            position: relative;
+        }
+        .login-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(6,182,212,0.35));
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         .login-box h2 {
-            margin-bottom: 20px;
-            color: #f5f6fa;
+            margin: 0 0 18px 0;
+            color: #eaf1ff;
+            font-size: 1.6rem;
+            letter-spacing: .5px;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .login-box input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
+            padding: 14px 14px;
+            margin: 10px 0 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
             font-size: 1rem;
+            outline: none;
+            transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+        .login-box input::placeholder {
+            color: #cbd5e1;
+        }
+        .login-box input:focus {
+            border-color: rgba(59,130,246,0.6);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+            background: rgba(255,255,255,0.12);
         }
         .login-box button {
             width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
-            color: white;
-            font-size: 1.2rem;
+            padding: 14px 16px;
+            border: 1px solid transparent;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 14px rgba(78,84,200,0.1);
+            transition: background 180ms ease, transform 160ms ease, box-shadow 160ms ease;
+            box-shadow: var(--btn-shadow);
+            margin-top: 6px;
         }
         .login-box button:hover {
-            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
-            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(135deg, var(--btn-hover-start), var(--btn-hover-end));
+            transform: translateY(-2px);
+            box-shadow: var(--btn-shadow-hover);
         }
+        .login-box button:focus-visible {
+            outline: none;
+            box-shadow: var(--btn-shadow-hover), var(--ring);
+        }
+        #login-error {
+            color: #ffb3b3;
+            background: rgba(255, 0, 0, 0.08);
+            border: 1px solid rgba(255, 0, 0, 0.18);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
         .logout-btn {
             position: fixed;
             top: 18px;
@@ -127,22 +296,25 @@
             background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
             transform: scale(1.04) rotate(-2deg);
         }
+
         .dropdown {
             position: relative;
             width: 100%;
             display: block;
         }
         .dropbtn {
-            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
-            margin: 0;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
         }
         .dropdown-content {
             display: none;
             position: absolute;
-            background: #223a5e;
-            min-width: 200px;
-            box-shadow: 0 8px 16px rgba(34,58,94,0.15);
-            border-radius: 12px;
+            background: #1d2f54;
+            min-width: 220px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
             z-index: 100;
             right: 0;
             top: 110%;
@@ -151,20 +323,22 @@
             display: block;
         }
         .dropdown-content button {
-            background: none;
-            color: #fff;
-            padding: 12px 18px;
+            background: transparent;
+            color: #e8eef7;
+            padding: 12px 16px;
             width: 100%;
             border: none;
             text-align: right;
-            border-radius: 0;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.98rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.15s ease, color 0.15s ease;
         }
         .dropdown-content button:hover {
-            background: #162447;
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
         }
+
         #copy-success {
             display:none;
             position:fixed;
@@ -198,98 +372,182 @@
     </style>
 </head>
 <body>
+    <!-- Modal Popup for template info -->
+    <div id="template-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeTemplateModal()">&times;</button>
+            <h3 id="modal-template-title"></h3>
+            <textarea id="modal-template-content" readonly></textarea>
+            <!-- زر نسخ محتوى القالب من المودال -->
+            <button
+                type="button"
+                class="button"
+                style="max-width:220px;margin:10px auto 0;display:block;"
+                onclick="copyModalTemplate()"
+            >
+                نسخ محتوى القالب
+            </button>
+        </div>
+    </div>
+
     <div class="header">Back Office Engineer</div>
+    <div id="user-info"></div>
+
+    <!-- Login Box -->
     <div class="login-box" id="login-box">
         <h2>Login</h2>
         <form id="login-form">
             <input type="email" id="email" placeholder="Email" required />
             <input type="password" id="password" placeholder="Password" required />
-            <button type="submit">Login</button>
-            <div id="login-error" style="color:#ffb3b3; margin-top:10px;"></div>
+            <button type="submit" id="login-btn">Login</button>
+            <div id="login-error"></div>
         </form>
     </div>
-        </div>
-        <!-- قسم tabadul Template (extra-templates) -->
-        <div id="extra-templates" class="hidden container" style="margin-top:40px;">
-            <button class="button" onclick="hideExtraTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
-            <button class="button" onclick="openInNewTab('https://epg-ui.tabadul.iq/epg_gui/#login')" style="display:none;">TABADUL</button>
-            <button class="button" onclick="openInNewTab('https://watani.support.tabadul.iq/en/support/home')" style="display:none;">TABADUL TIKET</button>
-            <button class="button" onclick="copyText(' تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة بدون استقطاع من الرصيد  يرجى اعادة المحاولة مرة اخرى وشكرا')" style="display:none;">No attempts left</button>
-            <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">Do not honor transaction</button>
-            <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">Cannot process transaction</button>
-            <button class="button" onclick="copyText('تحية طيبة المحاولة في وقت اخر (15-30 دقيقة ) لم يتم استقطاع رصيد من الزبون / او مراجعة الجهة المصدرة للبطاقة وشكرا')" style="display:none;">Session time limit</button>
-            <button class="button" onclick="copyText('تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة يرجى اعادة المحاولة مره اخر لم يتم استقطاع رصيد من الزبون وفي حال الفشل مره اخرى يرجى مراجعة الجهة المصدرة للبطاقة وشكرا')" style="display:none;">3DS2 CReq cancelled</button>
-            <button class="button" onclick="copyText('تحية طيبة مشكلة في الانترنت يرجى اعادة المحاولة لاحقا وفي حال الفشل مرة اخرى يراجع الجهة المصدرة لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">processing.error</button>
-            <button class="button" onclick="copyText('تحية طيبة تم التجييك لا يوجد رصيد كافي في البطاقة وشكرا')" style="display:none;">Not enough money</button>
-            <button class="button" onclick="copyText('تحية طيبة تم التجييك يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')" style="display:none;">TDS_AUTH_FAILED</button>
-            <button class="button" onclick="copyText('تحية طيبة تجاوز الوقت المحدد للدخول عبر البوابة (10 دقائق) يرجى اعادة المحاولة مره اخرى لم يتم استقطاع رصيد من الزبون  وشكرا')" style="display:none;">Limit exceeded</button>
-            <button class="button" onclick="copyText('تحية طيبة يرجى استبدال بطاقة الدفع الالكترونية ( فيزا او ماستر كارد) وشكرا')" style="display:none;">Payment failed. Cann't connect to Payment Gate</button>
-            <button class="button" onclick="copyText('تحية طيبة تم التجييك كود otp (الرمز الذي يصل في رسالة) لم تتم كتابته بطريقة صحيحة او تم التاخير في كتابته فيرجى إعادة المحاولة مره أخرى لتتم عملية الدفع وشكرا')" style="display:none;">3DS2 authentication successful</button>
-        </div>
 
-<div id="feedback-templates" class="hidden container" style="margin-top:40px;">
-    <button class="button" onclick="hideFeedBackTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/templates1.txt', this)" style="display:none;">حل مشكلة الباور والقطع</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template3.txt', this)" style="display:none;">تجديد اشتراك</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template4.txt', this)" style="display:none;">تأجيل الصيانة</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template5.txt', this)" style="display:none;">رفض الصيانه (الخدمة طبيعية)</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template20.txt', this)" style="display:none;">الزبون رفض الخدمة</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template6.txt', this)" style="display:none;">عدم الرد على الاتصال</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template7.txt', this)" style="display:none;">ضعف الخدمة</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template8.txt', this)" style="display:none;">اليوزر اوفلاين</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template9.txt', this)" style="display:none;">جكة المبيعات</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template10.txt', this)" style="display:none;">لم يتم حل الاشكال</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template11.txt', this)" style="display:none;">مشكلة في العامود</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template12.txt', this)" style="display:none;">شكرا على المتابعه</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template13.txt', this)" style="display:none;">تم الاتصال وطلب صيانه</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template15.txt', this)" style="display:none;">مشكلة في الايام الاضافية</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template16.txt', this)" style="display:none;">تغيير سيريال بدون صورة</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template27.txt', this)" style="display:none;">تغيير سيريال 360</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template17.txt', this)" style="display:none;">طلب الغاء ريكوست جديد</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template19.txt', this)" style="display:none;">لا يشمل عرض الجديد</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template21.txt', this)" style="display:none;">يرجى ذكر معلومات الاشتراك</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template22.txt', this)" style="display:none;">جار المتابعه في تكت</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template23.txt', this)" style="display:none;">مشكلة عدم ملئ معلومات البطاقة</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template24.txt', this)" style="display:none;">طلب تغيير زون لفيرجوال بيندنك</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template25.txt', this)" style="display:none;">طلب تغيير باسورد</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template26.txt', this)" style="display:none;">تغيير باسورد بدون باسورد</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template28.txt', this)" style="display:none;">طلب تغيير زون</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template29.txt', this)" style="display:none;">دعوة صديق اكث من 2</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template30.txt', this)" style="display:none;">طلب نقل اشتراك من قبل الوكيل</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template31.txt', this)" style="display:none;">تطبيق شاهد</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template32.txt', this)" style="display:none;">التجديد التلفائي</button>
-    <button class="button" onclick="copyTemplateText('feedtemplates/template31.txt', this)" style="display:none;">test</button>
-</div>
-<!-- مجموعة أزرار القوالب الخاصة فقط -->
-<div id="custom-templates" class="hidden container" style="margin-top:40px;">
-    <button class="button" onclick="hideCustomTemplates()" style="display:none;grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة لقوالب التغذية</button>
-    <div id="showFeedBackFATS" class="hidden container" style="margin-top:24px;grid-column:1/-1;">
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template1.txt', this)"> يوجد باور طبيعي في العامود  </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template2.txt', this)"> طلب المشتركين على العامود </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template13.txt', this)"> اضافة عامود على بناية    </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template5.txt', this)">  طلب توسيع عامود  </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template4.txt', this)"> طلب اضافة عامود   </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template8.txt', this)"> طلب تشفيت عامود   </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template7.txt', this)"> مشكله بعض البورتات بدون صورة   </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template11.txt', this)"> الباور مذبذب  </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template9.txt', this)"> جار المتابعه    </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template6.txt', this)"> Waiting for response </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template10.txt', this)"> اقل من 13 مشترك في العامود  </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template12.txt', this)"> مشتركين باور طبيعي  </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template14.txt', this)"> طلب تصفية عامود </button>
-        <button class="button" onclick="copyTemplateText('FeedBackFATS/template15.txt', this)"> TEST </button>
+    <!-- قسم tabadul Template (extra-templates) -->
+    <div id="extra-templates" class="hidden container" style="margin-top:40px;">
+        <button class="button" onclick="hideExtraTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+        <button class="button" onclick="openInNewTab('https://epg-ui.tabadul.iq/epg_gui/#login')">TABADUL</button>
+        <button class="button" onclick="openInNewTab('https://watani.support.tabadul.iq/en/support/home')">TABADUL TIKET</button>
+        <button class="button" onclick="copyText(' تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة بدون استقطاع من الرصيد  يرجى اعادة المحاولة مرة اخرى وشكرا')">No attempts left</button>
+        <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')">Do not honor transaction</button>
+        <button class="button" onclick="copyText('تحية طيبة يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')">Cannot process transaction</button>
+        <button class="button" onclick="copyText('تحية طيبة المحاولة في وقت اخر (15-30 دقيقة ) لم يتم استقطاع رصيد من الزبون / او مراجعة الجهة المصدرة للبطاقة وشكرا')">Session time limit</button>
+        <button class="button" onclick="copyText('تحية طيبة لم يصل otp (الرمز الذي يصل في رسالة) والحركة مرفوضة يرجى اعادة المحاولة مره اخر لم يتم استقطاع رصيد من الزبون وفي حال الفشل مره اخرى يرجى مراجعة الجهة المصدرة للبطاقة وشكرا')">3DS2 CReq cancelled</button>
+        <button class="button" onclick="copyText('تحية طيبة مشكلة في الانترنت يرجى اعادة المحاولة لاحقا وفي حال الفشل مرة اخرى يراجع الجهة المصدرة لم يتم استقطاع رصيد من الزبون وشكرا')">processing.error</button>
+        <button class="button" onclick="copyText('تحية طيبة تم التجييك لا يوجد رصيد كافي في البطاقة وشكرا')">Not enough money</button>
+        <button class="button" onclick="copyText('تحية طيبة تم التجييك يرجى مراجعة  الجهة مصدرة  لم يتم استقطاع رصيد من الزبون وشكرا')">TDS_AUTH_FAILED</button>
+        <button class="button" onclick="copyText('تحية طيبة تجاوز الوقت المحدد للدخول عبر البوابة (10 دقائق) يرجى اعادة المحاولة مره اخرى لم يتم استقطاع رصيد من الزبون  وشكرا')">Limit exceeded</button>
+        <button class="button" onclick="copyText('تحية طيبة يرجى استبدال بطاقة الدفع الالكترونية ( فيزا او ماستر كارد) وشكرا')">Payment failed. Cann&apos;t connect to Payment Gate</button>
+        <button class="button" onclick="copyText('تحية طيبة تم التجييك كود otp (الرمز الذي يصل في رسالة) لم تتم كتابته بطريقة صحيحة او تم التاخير في كتابته فيرجى إعادة المحاولة مره أخرى لتتم عملية الدفع وشكرا')">3DS2 authentication successful</button>
     </div>
-</div>
-    
+
+    <!-- FeedBack Templates -->
+    <div id="feedback-templates" class="hidden container" style="margin-top:40px;">
+        <button class="button" onclick="hideFeedBackTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+
+        <!-- مربع بحث داخل قوالب التغذية -->
+        <input
+            id="feedback-templates-search"
+            type="text"
+            placeholder="بحث داخل قوالب التغذية..."
+            style="grid-column:1/-1;padding:10px 12px;border-radius:10px;border:1px solid #d1d5db;font-size:0.95rem;margin-bottom:10px;"
+            oninput="filterTemplateButtons('feedback-templates', this.value)"
+        />
+
+        <button class="button" onclick="copyTemplateText('feedtemplates/templates1.txt', this)">حل مشكلة الباور والقطع</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template3.txt', this)">تجديد اشتراك</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template4.txt', this)">تأجيل الصيانة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template5.txt', this)">رفض الصيانه (الخدمة طبيعية)</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template20.txt', this)">الزبون رفض الخدمة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template6.txt', this)">عدم الرد على الاتصال</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template7.txt', this)">ضعف الخدمة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template8.txt', this)">اليوزر اوفلاين</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template9.txt', this)">جكة المبيعات</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template10.txt', this)">لم يتم حل الاشكال</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template11.txt', this)">مشكلة في العامود</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template12.txt', this)">شكرا على المتابعه</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template13.txt', this)">تم الاتصال وطلب صيانه</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template15.txt', this)">مشكلة في الايام الاضافية</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template16.txt', this)">تغيير سيريال بدون صورة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template27.txt', this)">تغيير سيريال 360</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template17.txt', this)">طلب الغاء ريكوست جديد</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template19.txt', this)">لا يشمل عرض الجديد</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template21.txt', this)">يرجى ذكر معلومات الاشتراك</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template22.txt', this)">جار المتابعه في تكت</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template23.txt', this)">مشكلة عدم ملئ معلومات البطاقة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template24.txt', this)">طلب تغيير زون لفيرجوال بيندنك</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template25.txt', this)">طلب تغيير باسورد</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template26.txt', this)">تغيير باسورد بدون باسورد</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template28.txt', this)">طلب تغيير زون</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template29.txt', this)">دعوة صديق اكث من 2</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template30.txt', this)">طلب نقل اشتراك من قبل الوكيل</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template31.txt', this)">تطبيق شاهد</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template32.txt', this)">التجديد التلفائي</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template34.txt', this)">ضعف خدمة</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template33.txt', this)">معلومات اشتراك نقص</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template35.txt', this)">طلب توضيف</button>
+        <button class="button" onclick="copyTemplateText('feedtemplates/template36.txt', this)">TEST</button>
+    </div>
+
+    <!-- Email Templates -->
+    <div id="email-templates" class="hidden container" style="margin-top:40px;">
+        <button class="button" onclick="hideEmailTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة للقائمة الرئيسية</button>
+
+        <!-- مربع بحث داخل قوالب الإيميل -->
+        <input
+            id="email-templates-search"
+            type="text"
+            placeholder="بحث داخل قوالب الإيميل..."
+            style="grid-column:1/-1;padding:10px 12px;border-radius:10px;border:1px solid #d1d5db;font-size:0.95rem;margin-bottom:10px;"
+            oninput="filterTemplateButtons('email-templates', this.value)"
+        />
+
+        <button class="button" onclick="showTemplateContent('templates/template6.txt', this)">Zone Down</button>
+        <button class="button" onclick="showTemplateContent('templates/template21.txt', this)">Zone complex Down</button>
+        <button class="button" onclick="showTemplateContent('templates/template1.txt', this)">Portal Slow</button>
+        <button class="button" onclick="showTemplateContent('templates/template2.txt', this)">DNS Problem</button>
+        <button class="button" onclick="showTemplateContent('templates/template3.txt', this)">Portal stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template4.txt', this)">Problem Refill users</button>
+        <button class="button" onclick="showTemplateContent('templates/template5.txt', this)">Drop Services</button>
+        <button class="button" onclick="showTemplateContent('templates/template7.txt', this)">Attachment issue</button>
+        <button class="button" onclick="showTemplateContent('templates/template8.txt', this)">Most GPON Down</button>
+        <button class="button" onclick="showTemplateContent('templates/template9.txt', this)">OLT Down MGM</button>
+        <button class="button" onclick="showTemplateContent('templates/template10.txt', this)">Operation Outage</button>
+        <button class="button" onclick="showTemplateContent('templates/template11.txt', this)">Site down</button>
+        <button class="button" onclick="showTemplateContent('templates/template12.txt', this)">OTP Service Stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template13.txt', this)">Alwatani App Stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template14.txt', this)">Wallet transactions Issue</button>
+        <button class="button" onclick="showTemplateContent('templates/template15.txt', this)">Sales Portal stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template16.txt', this)">Almanasa stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template17.txt', this)">Creatio stopped</button>
+        <button class="button" onclick="showTemplateContent('templates/template18.txt', this)">Customer Onboarding Request Issue</button>
+        <button class="button" onclick="showTemplateContent('templates/template19.txt', this)">VLAN Site activation</button>
+        <button class="button" onclick="showTemplateContent('templates/template20.txt', this)">ADD FAT TO CREATIO</button>
+
+        <textarea
+            id="template-content-viewer"
+            rows="12"
+            style="width:100%;font-size:1.1em;direction:ltr;resize:vertical;margin-top:18px;display:none;"
+            readonly
+            placeholder="سيظهر محتوى القالب هنا..."
+        ></textarea>
+    </div>
+
+    <!-- مجموعة أزرار القوالب الخاصة فقط -->
+    <div id="custom-templates" class="hidden container" style="margin-top:40px;">
+        <button class="button" onclick="hideCustomTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة لقوالب التغذية</button>
+
+        <div id="showFeedBackFATS" class="container" style="margin-top:24px;grid-column:1/-1;">
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template1.txt', this)">يوجد باور طبيعي في العامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template2.txt', this)">طلب المشتركين على العامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template13.txt', this)">اضافة عامود على بناية</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template5.txt', this)">طلب توسيع عامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template4.txt', this)">طلب اضافة عامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template8.txt', this)">طلب تشفيت عامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template7.txt', this)">مشكله بعض البورتات بدون صورة</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template11.txt', this)">الباور مذبذب</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template9.txt', this)">جار المتابعه</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template6.txt', this)">Waiting for response</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template10.txt', this)">اقل من 13 مشترك في العامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template12.txt', this)">مشتركين باور طبيعي</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template14.txt', this)">طلب تصفية عامود</button>
+            <button class="button" onclick="copyTemplateText('FeedBackFATS/template15.txt', this)">TEST</button>
+        </div>
+    </div>
+
+    <!-- Main Buttons (Dashboard) -->
     <div class="container" id="main-buttons" style="display:none;">
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">Feed Back Templates</button>
             <div class="dropdown-content">
                 <button onclick="showFeedBackTemplates()">FEED BACK NEW</button>
                 <button onclick="showCustomTemplates()">FEED BACK FATS</button>
-                <button onclick="showExtraTemplates()"> tabadul Template </button>
+                <button onclick="showEmailTemplates()">Templates</button>
+                <button onclick="showExtraTemplates()">tabadul Template</button>
             </div>
         </div>
+
         <button onclick="window.open('QGIS-MOHA.HTML', '_blank')">QGIS-MOHA</button>
         <button onclick="window.open('http://10.6.115.5:4750/login', '_blank')">tuuunel</button>
         <button onclick="window.open('https://192.168.219.126/zabbix.php?action=dashboard.view', '_blank')">ZABBIX</button>
@@ -299,7 +557,9 @@
         <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
         <button onclick="window.open('https://hris.earthlink.iq/login', '_blank')">HRIS</button>
         <button onclick="window.open('https://kb.ftth.iq/', '_blank')">Knowledge Base</button>
-  
+        <button onclick="window.open('https://ticket.earthlink.iq/Tickets/AddTicket.aspx?showpage=add&tickettype=pointticket&ID=90671')">New Ticket DEV</button>
+        <button onclick="window.open('zayona-sheet.html', '_blank')">zayona</button>
+        <button onclick="window.open('Access-Data.html', '_blank')">Access Data</button>
 
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">Grafana</button>
@@ -309,6 +569,18 @@
                 <button onclick="window.open('https://dash.elcld.net/d/dZPegMo7z/ftth-online-users?orgId=1&viewPanel=35', '_blank')">Active Users</button>
             </div>
         </div>
+
+        <div class="dropdown">
+            <button class="dropbtn" tabindex="0">IT HELPDESK</button>
+            <div class="dropdown-content">
+                <button onclick="window.open('https://pwm.earthlink.iq/pwm/private/login')">PWM</button>
+                <button onclick="window.open('https://vpn.earthlink.iq/')">VPN</button>
+                <button onclick="window.open('https://otp.el.earthlink.iq/#!/login')">PRIVACY ID AUTHENTICATOR</button>
+                <button onclick="window.open('https://ipa01.el.earthlink.iq/ipa/ui/')">HRMS</button>
+                <button onclick="window.open('https://hrms.elcld.net/interface/html5/#!m=Login')">TIMETREX</button>
+            </div>
+        </div>
+
         <div class="dropdown">
             <button class="dropbtn" tabindex="0">JW</button>
             <div class="dropdown-content">
@@ -320,54 +592,36 @@
             </div>
         </div>
     </div>
+
     <button id="logout-btn" class="logout-btn">Logout</button>
-    <div id="copy-success" style="display:none;position:fixed;top:30px;right:30px;z-index:3000;background:#27ae60;color:#fff;padding:12px 28px;border-radius:30px;font-size:1.1rem;box-shadow:0 2px 12px #27ae6040;transition:opacity 0.4s;opacity:0;align-items:center;gap:10px;">
+
+    <div id="copy-success">
         <span style="font-size:1.5em;vertical-align:middle;">✔️</span> تم النسخ
     </div>
+
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
     <script>
-    // دالة نسخ نص مباشر
-    function copyText(text) {
-        // الحصول على الزر الذي تم الضغط عليه
-        const active = document.activeElement;
-        navigator.clipboard.writeText(text);
-        // إظهار تأثير النسخ
-        const el = document.getElementById('copy-success');
-        if (el) {
-            el.classList.add('show');
-            setTimeout(()=>{el.classList.remove('show');}, 2000);
-        }
-        // إضافة كلاس copied للزر
-        if (active && active.classList && active.classList.contains('button')) {
-            active.classList.add('copied');
-            setTimeout(()=>active.classList.remove('copied'), 2000);
-        }
-    }
-    // دالة فتح رابط في تبويب جديد
-    function openInNewTab(url) {
-        window.open(url, '_blank');
-    }
-    </script>
-    <script>
-        // Place your Supabase project credentials here
+        // Supabase credentials
         const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw";
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loginForm = document.getElementById('login-form');
         const loginBox = document.getElementById('login-box');
-        const mainContent = document.getElementById('main-content');
         const loginError = document.getElementById('login-error');
+        const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const mainButtons = document.getElementById('main-buttons');
         const feedbackTemplates = document.getElementById('feedback-templates');
-        const showTemplatesBtn = document.getElementById('show-templates-btn');
-        const backToMainBtn = document.querySelector("#feedback-templates button[onclick*='hideFeedBackTemplates']");
         const customTemplates = document.getElementById('custom-templates');
-        const showCustomBtn = document.getElementById('show-custom-btn');
-        const backToCustomBtn = document.querySelector("#custom-templates button[onclick*='hideCustomTemplates']");
+        const extraTemplates = document.getElementById('extra-templates');
+        const emailTemplates = document.getElementById('email-templates');
+        const showFeedBackFATS = document.getElementById('showFeedBackFATS');
+        const userInfo = document.getElementById('user-info');
 
-        // Dropdown logic: keep menu open when hovering over button or menu
+        // Dropdown logic
         document.querySelectorAll('.dropdown').forEach(function(drop){
             const btn = drop.querySelector('.dropbtn');
             const content = drop.querySelector('.dropdown-content');
@@ -402,11 +656,18 @@
             document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));
         });
 
+        // Login logic
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             loginError.textContent = '';
+
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'جاري تسجيل الدخول...';
+            }
+
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 console.log('Supabase response:', { data, error });
@@ -416,17 +677,24 @@
                     loginBox.style.display = 'none';
                     mainButtons.style.display = 'grid';
                     feedbackTemplates.classList.add('hidden');
-                    customTemplates.classList.add('hidden'); // إخفاء القوالب الخاصة عند الدخول
-                    document.getElementById('showFeedBackFATS').classList.add('hidden');
-                    if (showTemplatesBtn) showTemplatesBtn.style.display = 'block';
-                    if (showCustomBtn) showCustomBtn.style.display = 'block';
-                    if (backToMainBtn) backToMainBtn.style.display = 'block';
-                    if (backToCustomBtn) backToCustomBtn.style.display = 'block';
+                    customTemplates.classList.add('hidden');
+                    extraTemplates.classList.add('hidden');
+                    emailTemplates.classList.add('hidden');
+                    showFeedBackFATS.classList.add('hidden');
                     logoutBtn.classList.add('show');
+
+                    if (data && data.user && data.user.email && userInfo) {
+                        userInfo.textContent = 'Logged in as: ' + data.user.email;
+                    }
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
                 loginError.textContent = err.message || 'An unexpected error occurred.';
+            } finally {
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                }
             }
         });
 
@@ -434,82 +702,35 @@
             await supabase.auth.signOut();
             mainButtons.style.display = 'none';
             feedbackTemplates.classList.add('hidden');
-            customTemplates.classList.add('hidden'); // إخفاء القوالب الخاصة عند تسجيل الخروج
-            document.getElementById('showFeedBackFATS').classList.add('hidden');
-            if (showTemplatesBtn) showTemplatesBtn.style.display = 'none';
-            if (backToMainBtn) backToMainBtn.style.display = 'none';
+            customTemplates.classList.add('hidden');
+            extraTemplates.classList.add('hidden');
+            emailTemplates.classList.add('hidden');
+            showFeedBackFATS.classList.add('hidden');
             loginBox.style.display = 'flex';
             logoutBtn.classList.remove('show');
             loginForm.reset();
+            if (userInfo) userInfo.textContent = '';
         });
 
-        function showFeedBackTemplates() {
-            document.getElementById('main-buttons').classList.add('hidden');
-            document.getElementById('feedback-templates').classList.remove('hidden');
-            // إظهار جميع أزرار قوالب التغذية تلقائيًا
-            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
-                if (btn.textContent !== 'عودة للقائمة الرئيسية') {
-                    btn.style.display = 'block';
-                } else {
-                    btn.style.display = 'block';
-                }
-            });
-            // إخفاء أزرار القوالب الخاصة إذا كانت ظاهرة
-            if (document.getElementById('showFeedBackFATS')) {
-                document.getElementById('showFeedBackFATS').classList.add('hidden');
+        // دوال عامة
+        function copyText(text) {
+            const active = document.activeElement;
+            navigator.clipboard.writeText(text);
+            const el = document.getElementById('copy-success');
+            if (el) {
+                el.classList.add('show');
+                setTimeout(()=>{el.classList.remove('show');}, 2000);
+            }
+            if (active && active.classList && active.classList.contains('button')) {
+                active.classList.add('copied');
+                setTimeout(()=>active.classList.remove('copied'), 2000);
             }
         }
-        function showTemplateButtons() {
-            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
-                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
-                    btn.style.display = 'block';
-                    btn.onclick = async function() {
-                        const filePath = btn.getAttribute('onclick')?.match(/'([^']+)'/);
-                        if (filePath && filePath[1]) {
-                            await copyTemplateText(filePath[1], btn);
-                        }
-                    };
-                }
-            });
-            document.getElementById('show-templates-btn').style.display = 'none';
-        }
-        function showCustomTemplates() {
-            document.getElementById('main-buttons').classList.add('hidden');
-            document.getElementById('feedback-templates').classList.add('hidden');
-            document.getElementById('custom-templates').classList.remove('hidden');
-            // إظهار جميع أزرار القوالب الخاصة تلقائيًا
-            document.getElementById('showFeedBackFATS').classList.remove('hidden');
-            document.querySelectorAll('#showFeedBackFATS .button').forEach(btn => {
-                btn.style.display = 'block';
-            });
-        }
-        function showCustomButtons() {
-            document.getElementById('showFeedBackFATS').classList.remove('hidden');
-            document.getElementById('show-custom-btn').style.display = 'none';
-            // إظهار الأزرار فقط داخل القسم
-            document.querySelectorAll('#showFeedBackFATS .button').forEach(btn => {
-                btn.style.display = 'block';
-            });
-        }
-        // دوال إظهار/إخفاء الأزرار الإضافية
-        function showExtraTemplates() {
-            document.getElementById('main-buttons').classList.add('hidden');
-            document.getElementById('feedback-templates').classList.add('hidden');
-            document.getElementById('custom-templates').classList.add('hidden');
-            document.getElementById('extra-templates').classList.remove('hidden');
-            document.querySelectorAll('#extra-templates .button').forEach(btn => {
-                btn.style.display = 'block';
-            });
-        }
-        function hideExtraTemplates() {
-            document.getElementById('extra-templates').classList.add('hidden');
-            document.getElementById('main-buttons').classList.remove('hidden');
-            document.querySelectorAll('#extra-templates .button').forEach(btn => {
-                btn.style.display = 'none';
-            });
+
+        function openInNewTab(url) {
+            window.open(url, '_blank');
         }
 
-        // دالة نسخ نص القالب من الملف
         async function copyTemplateText(filePath, btn) {
             try {
                 const response = await fetch(filePath);
@@ -520,39 +741,129 @@
                     btn.classList.add('copied');
                     setTimeout(()=>btn.classList.remove('copied'), 2000);
                 }
+                const el = document.getElementById('copy-success');
+                if (el) {
+                    el.classList.add('show');
+                    setTimeout(()=>{el.classList.remove('show');}, 2000);
+                }
             } catch (e) {
                 alert('حدث خطأ أثناء النسخ: ' + e.message);
             }
         }
-        function showCopySuccess() {
-            const el = document.getElementById('copy-success');
-            if (!el) return;
-            el.classList.add('show');
-            setTimeout(()=>{el.classList.remove('show');}, 2000);
+
+        function showTemplateContent(path, btn) {
+            fetch(path)
+                .then(res => res.text())
+                .then(txt => {
+                    const modal = document.getElementById('template-modal');
+                    const title = document.getElementById('modal-template-title');
+                    const content = document.getElementById('modal-template-content');
+                    title.textContent = btn ? btn.textContent : 'القالب';
+                    content.value = txt;
+                    modal.classList.add('show');
+                })
+                .catch(() => {
+                    const modal = document.getElementById('template-modal');
+                    const title = document.getElementById('modal-template-title');
+                    const content = document.getElementById('modal-template-content');
+                    title.textContent = btn ? btn.textContent : 'القالب';
+                    content.value = 'تعذر تحميل القالب';
+                    modal.classList.add('show');
+                });
         }
 
-        function hideFeedBackTemplates() {
-            document.getElementById('feedback-templates').classList.add('hidden');
-            document.getElementById('main-buttons').classList.remove('hidden');
-            // إخفاء الأزرار عند العودة
-            document.querySelectorAll('#feedback-templates .button').forEach(btn => {
-                if (btn.id !== 'show-templates-btn' && btn.textContent !== 'عودة للقائمة الرئيسية') {
+        function closeTemplateModal() {
+            document.getElementById('template-modal').classList.remove('show');
+        }
+
+        function copyModalTemplate() {
+            const textarea = document.getElementById('modal-template-content');
+            if (!textarea) return;
+            const text = textarea.value || '';
+            if (!text.trim()) {
+                alert('لا يوجد محتوى لنسخه.');
+                return;
+            }
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    const el = document.getElementById('copy-success');
+                    if (el) {
+                        el.classList.add('show');
+                        setTimeout(() => el.classList.remove('show'), 2000);
+                    } else {
+                        alert('تم النسخ بنجاح ✅');
+                    }
+                })
+                .catch(() => {
+                    alert('تعذر نسخ النص، يرجى المحاولة مرة أخرى.');
+                });
+        }
+
+        function filterTemplateButtons(sectionId, query) {
+            const container = document.getElementById(sectionId);
+            if (!container) return;
+            const q = (query || '').toLowerCase().trim();
+
+            container.querySelectorAll('.button').forEach(btn => {
+                if (btn.textContent.includes('عودة')) {
+                    btn.style.display = 'block';
+                    return;
+                }
+                const text = btn.textContent.toLowerCase();
+                if (!q || text.includes(q)) {
+                    btn.style.display = 'block';
+                } else {
                     btn.style.display = 'none';
                 }
             });
-            document.getElementById('show-templates-btn').style.display = 'block';
-            if (showCustomBtn) showCustomBtn.style.display = 'block'; // إظهار زر القوالب الخاصة عند العودة
         }
+
+        // إظهار/إخفاء الأقسام
+        function showFeedBackTemplates() {
+            mainButtons.classList.add('hidden');
+            feedbackTemplates.classList.remove('hidden');
+        }
+
+        function hideFeedBackTemplates() {
+            feedbackTemplates.classList.add('hidden');
+            mainButtons.classList.remove('hidden');
+        }
+
+        function showCustomTemplates() {
+            mainButtons.classList.add('hidden');
+            feedbackTemplates.classList.add('hidden');
+            customTemplates.classList.remove('hidden');
+        }
+
         function hideCustomTemplates() {
-            document.getElementById('custom-templates').classList.add('hidden');
-            document.getElementById('main-buttons').classList.remove('hidden');
-            document.getElementById('showFeedBackFATS').classList.add('hidden');
-            document.getElementById('show-custom-btn').style.display = 'block';
-            // إخفاء جميع الأزرار داخل القسم
-            document.querySelectorAll('#showFeedBackFATS .button').forEach(btn => {
-                btn.style.display = 'none';
-            });
-            if (showTemplatesBtn) showTemplatesBtn.style.display = 'block';
+            customTemplates.classList.add('hidden');
+            mainButtons.classList.remove('hidden');
+        }
+
+        function showExtraTemplates() {
+            mainButtons.classList.add('hidden');
+            feedbackTemplates.classList.add('hidden');
+            customTemplates.classList.add('hidden');
+            emailTemplates.classList.add('hidden');
+            extraTemplates.classList.remove('hidden');
+        }
+
+        function hideExtraTemplates() {
+            extraTemplates.classList.add('hidden');
+            mainButtons.classList.remove('hidden');
+        }
+
+        function showEmailTemplates() {
+            mainButtons.classList.add('hidden');
+            feedbackTemplates.classList.add('hidden');
+            customTemplates.classList.add('hidden');
+            extraTemplates.classList.add('hidden');
+            emailTemplates.classList.remove('hidden');
+        }
+
+        function hideEmailTemplates() {
+            emailTemplates.classList.add('hidden');
+            mainButtons.classList.remove('hidden');
         }
     </script>
 </body>
