@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Back Office Engineer</title>
 
-    <!-- Modal styles -->
+    <!-- Modal + Main Styles -->
     <style>
         /* Modal styles - modern, larger, matching page design */
         .modal-overlay {
@@ -132,6 +132,7 @@
             max-width: 1200px;
             width: min(96%, 1200px);
         }
+
         /* Unified modern button style */
         button, .button, .dropbtn {
             appearance: none;
@@ -832,12 +833,16 @@
         function showCustomTemplates() {
             mainButtons.classList.add('hidden');
             feedbackTemplates.classList.add('hidden');
+            extraTemplates.classList.add('hidden');
+            emailTemplates.classList.add('hidden');
             customTemplates.classList.remove('hidden');
+            showFeedBackFATS.classList.remove('hidden');
         }
 
         function hideCustomTemplates() {
             customTemplates.classList.add('hidden');
             mainButtons.classList.remove('hidden');
+            showFeedBackFATS.classList.add('hidden');
         }
 
         function showExtraTemplates() {
