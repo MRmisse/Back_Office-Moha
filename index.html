@@ -801,7 +801,7 @@
     <script>
         const SUPABASE_URL = "https://hkzfxpqjrwyxetsjdjor.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhremZ4cHFqcnd5eGV0c2pkam9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4MjkyMjQsImV4cCI6MjA2NzQwNTIyNH0.qR9hBlQ4crAiLmKO0gd9JNfo2Jj95dvEE6E2oc9E9Lw";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            window.supabaseClient
 
         const loginForm = document.getElementById('login-form');
         const loginBox = document.getElementById('login-box');
@@ -1080,5 +1080,6 @@ function closeContactModal() {
     </script>
 </body>
 </html>
+
 
 
