@@ -554,6 +554,18 @@
       readonly placeholder="سيظهر محتوى القالب هنا..."></textarea>
   </div>
 
+  <!-- ✅✅✅ NEW: TEST Templates Section -->
+  <div id="test-templates" class="hidden container" style="margin-top:40px;">
+    <button class="button" onclick="hideTestTemplates()"
+      style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">
+      عودة للقائمة الرئيسية
+    </button>
+
+    <button class="button" onclick="copyText('test 1 content')">test</button>
+    <button class="button" onclick="copyText('test 2 content')">test</button>
+    <button class="button" onclick="copyText('test 3 content')">test</button>
+  </div>
+
   <!-- ========== Custom FATS Templates ========== -->
   <div id="custom-templates" class="hidden container" style="margin-top:40px;">
     <button class="button" onclick="hideCustomTemplates()" style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">عودة لقوالب التغذية</button>
@@ -585,6 +597,9 @@
         <button onclick="showCustomTemplates()">FEED BACK FATS</button>
         <button onclick="showEmailTemplates()">Templates</button>
         <button onclick="showExtraTemplates()">tabadul Template</button>
+
+        <!-- ✅ NEW -->
+        <button onclick="showTestTemplates()">TEST</button>
       </div>
     </div>
 
@@ -677,6 +692,10 @@
     const customTemplates = document.getElementById('custom-templates');
     const extraTemplates = document.getElementById('extra-templates');
     const emailTemplates = document.getElementById('email-templates');
+
+    // ✅ NEW
+    const testTemplates = document.getElementById('test-templates');
+
     const showFeedBackFATS = document.getElementById('showFeedBackFATS');
     const userInfo = document.getElementById('user-info');
 
@@ -752,10 +771,12 @@
         if (loginBox) loginBox.style.display = 'none';
 
         if (mainButtons) mainButtons.style.display = 'grid';
+
         if (feedbackTemplates) feedbackTemplates.classList.add('hidden');
         if (customTemplates) customTemplates.classList.add('hidden');
         if (extraTemplates) extraTemplates.classList.add('hidden');
         if (emailTemplates) emailTemplates.classList.add('hidden');
+        if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
         if (showFeedBackFATS) showFeedBackFATS.classList.add('hidden');
 
         if (logoutBtn) logoutBtn.classList.add('show');
@@ -783,6 +804,7 @@
       if (customTemplates) customTemplates.classList.add('hidden');
       if (extraTemplates) extraTemplates.classList.add('hidden');
       if (emailTemplates) emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       if (showFeedBackFATS) showFeedBackFATS.classList.add('hidden');
 
       if (authWrapper) authWrapper.style.display = 'flex';
@@ -906,6 +928,7 @@
       feedbackTemplates.classList.add('hidden');
       extraTemplates.classList.add('hidden');
       emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       customTemplates.classList.remove('hidden');
       showFeedBackFATS.classList.remove('hidden');
     }
@@ -920,6 +943,7 @@
       feedbackTemplates.classList.add('hidden');
       customTemplates.classList.add('hidden');
       emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       extraTemplates.classList.remove('hidden');
     }
     function hideExtraTemplates() {
@@ -932,10 +956,26 @@
       feedbackTemplates.classList.add('hidden');
       customTemplates.classList.add('hidden');
       extraTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       emailTemplates.classList.remove('hidden');
     }
     function hideEmailTemplates() {
       emailTemplates.classList.add('hidden');
+      mainButtons.classList.remove('hidden');
+    }
+
+    // ✅✅✅ NEW: Test Section show/hide
+    function showTestTemplates() {
+      mainButtons.classList.add('hidden');
+      feedbackTemplates.classList.add('hidden');
+      customTemplates.classList.add('hidden');
+      extraTemplates.classList.add('hidden');
+      emailTemplates.classList.add('hidden');
+      showFeedBackFATS.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.remove('hidden');
+    }
+    function hideTestTemplates() {
+      if (testTemplates) testTemplates.classList.add('hidden');
       mainButtons.classList.remove('hidden');
     }
 
