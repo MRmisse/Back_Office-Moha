@@ -553,18 +553,20 @@
       style="width:100%;font-size:1.1em;direction:ltr;resize:vertical;margin-top:18px;display:none;"
       readonly placeholder="سيظهر محتوى القالب هنا..."></textarea>
   </div>
+  
+<!-- ✅✅✅ NEW: TEST Templates Section -->
+<div id="test-templates" class="hidden container" style="margin-top:40px;">
+  <button class="button" onclick="hideTestTemplates()"
+    style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">
+    عودة للقائمة الرئيسية
+  </button>
 
-  <!-- ✅✅✅ NEW: TEST Templates Section -->
-  <div id="test-templates" class="hidden container" style="margin-top:40px;">
-    <button class="button" onclick="hideTestTemplates()"
-      style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">
-      عودة للقائمة الرئيسية
-    </button>
+  <!-- ✅ مثل Templates: يفتح مودال ويعرض النص -->
+  <button class="button" onclick="showTemplateContent('testtemplates/test1.txt', this)">test</button>
+  <button class="button" onclick="showTemplateContent('testtemplates/test2.txt', this)">test</button>
+  <button class="button" onclick="showTemplateContent('testtemplates/test3.txt', this)">test</button>
+</div>
 
-    <button class="button" onclick="copyText('test 1 content')">test</button>
-    <button class="button" onclick="copyText('test 2 content')">test</button>
-    <button class="button" onclick="copyText('test 3 content')">test</button>
-  </div>
 
   <!-- ========== Custom FATS Templates ========== -->
   <div id="custom-templates" class="hidden container" style="margin-top:40px;">
