@@ -1,0 +1,10 @@
+معلومات الاشتراك لا تظهر 
+Set a title to your ticket:
+Subscription information not showing on agent page
+
+description : 
+Kindly be informed that there is an issue on the agent page where the customer’s subscription information is not displayed, as shown in the attached image. Please resolve the issue. Thank you
+
+Account : 
+SAPBrimId : 
+Case : 

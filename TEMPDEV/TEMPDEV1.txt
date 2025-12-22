@@ -1,0 +1,12 @@
+مشكلة في العروض 
+Set a title to your ticket: 
+
+Service Activation Offers not showing on agent page
+
+description : 
+
+Kindly be informed that the customer has Service Activation Offers; however, the offer does not appear on the agent page. Please follow up and resolve the issue. Thank you.
+
+Account : 
+SAPBrimId : 
+Case : 

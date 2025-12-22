@@ -1,0 +1,18 @@
+استقطاع ولم يتم التجديد 
+
+Set a title to your ticket: 
+ Activation Amount Deducted but Subscription Not Renewed 
+
+description : 
+Greetings,
+The activation amount was deducted from the customer, but the subscription has not been renewed yet.
+Kindly follow up and resolve the issue. Thank you
+
+Account: 
+SAPBrimId : 
+Order ID : 
+Order Number : 
+Card number :
+Payment state : Deposited or Declined
+Date :
+Case : 
