@@ -553,6 +553,20 @@
       style="width:100%;font-size:1.1em;direction:ltr;resize:vertical;margin-top:18px;display:none;"
       readonly placeholder="سيظهر محتوى القالب هنا..."></textarea>
   </div>
+  
+<!-- ✅✅✅ NEW: TEST Templates Section -->
+<div id="test-templates" class="hidden container" style="margin-top:40px;">
+  <button class="button" onclick="hideTestTemplates()"
+    style="grid-column:1/-1;background:linear-gradient(90deg,#ff5858 0%,#f09819 100%);color:#fff;">
+    عودة للقائمة الرئيسية
+  </button>
+
+  <!-- ✅ مثل Templates: يفتح مودال ويعرض النص -->
+  <button class="button" onclick="showTemplateContent('TEMPDEV/TEMPDEV1.txt', this)">مشكلة في العروض</button>
+  <button class="button" onclick="showTemplateContent('TEMPDEV/TEMPDEV2.txt', this)">استقطاع ولم يتم التجديد</button>
+  <button class="button" onclick="showTemplateContent('TEMPDEV/TEMPDEV3.txt', this)">معلومات الاشتراك لا تظهر</button>
+</div>
+
 
   <!-- ========== Custom FATS Templates ========== -->
   <div id="custom-templates" class="hidden container" style="margin-top:40px;">
@@ -579,12 +593,13 @@
   <!-- ========== Main Buttons Dashboard ========== -->
   <div class="container" id="main-buttons" style="display:none;">
     <div class="dropdown">
-      <button class="dropbtn" tabindex="0">Feed Back Templates</button>
+      <button class="dropbtn" tabindex="0">Templates</button>
       <div class="dropdown-content">
         <button onclick="showFeedBackTemplates()">FEED BACK NEW</button>
         <button onclick="showCustomTemplates()">FEED BACK FATS</button>
-        <button onclick="showEmailTemplates()">Templates</button>
+        <button onclick="showEmailTemplates()">Templates EMAIL</button>
         <button onclick="showExtraTemplates()">tabadul Template</button>
+        <button onclick="showTestTemplates()">Dev Template</button>
       </div>
     </div>
 
@@ -594,7 +609,7 @@
     <button onclick="window.open('http://10.6.115.5:4500/dashboard', '_blank')">NOC Portal</button>
     <button onclick="window.open('https://sso.ftth.iq/auth/admin/master/console/#/realms/Customers/users', '_blank')">SSO FTTH</button>
     <button onclick="window.open('https://alwatani-requests.netlify.app/vacations.html', '_blank')">Vacation Calendar</button>
-    <button onclick="window.open('https://alwatani-requests.netlify.app/tickets.html', '_blank')">BackOffice CASE</button>
+    <button onclick="window.open('https://backoffice.giize.com/login.html', '_blank')">BackOffice CASE</button>
     <button onclick="window.open('https://hris.earthlink.iq/login', '_blank')">HRIS</button>
     <button onclick="window.open('https://kb.ftth.iq/', '_blank')">Knowledge Base</button>
     <button onclick="window.open('https://ticket.earthlink.iq/Tickets/AddTicket.aspx?showpage=add&tickettype=pointticket&ID=90671')">New Ticket DEV</button>
@@ -677,6 +692,10 @@
     const customTemplates = document.getElementById('custom-templates');
     const extraTemplates = document.getElementById('extra-templates');
     const emailTemplates = document.getElementById('email-templates');
+
+    // ✅ NEW
+    const testTemplates = document.getElementById('test-templates');
+
     const showFeedBackFATS = document.getElementById('showFeedBackFATS');
     const userInfo = document.getElementById('user-info');
 
@@ -752,10 +771,12 @@
         if (loginBox) loginBox.style.display = 'none';
 
         if (mainButtons) mainButtons.style.display = 'grid';
+
         if (feedbackTemplates) feedbackTemplates.classList.add('hidden');
         if (customTemplates) customTemplates.classList.add('hidden');
         if (extraTemplates) extraTemplates.classList.add('hidden');
         if (emailTemplates) emailTemplates.classList.add('hidden');
+        if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
         if (showFeedBackFATS) showFeedBackFATS.classList.add('hidden');
 
         if (logoutBtn) logoutBtn.classList.add('show');
@@ -783,6 +804,7 @@
       if (customTemplates) customTemplates.classList.add('hidden');
       if (extraTemplates) extraTemplates.classList.add('hidden');
       if (emailTemplates) emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       if (showFeedBackFATS) showFeedBackFATS.classList.add('hidden');
 
       if (authWrapper) authWrapper.style.display = 'flex';
@@ -906,6 +928,7 @@
       feedbackTemplates.classList.add('hidden');
       extraTemplates.classList.add('hidden');
       emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       customTemplates.classList.remove('hidden');
       showFeedBackFATS.classList.remove('hidden');
     }
@@ -920,6 +943,7 @@
       feedbackTemplates.classList.add('hidden');
       customTemplates.classList.add('hidden');
       emailTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       extraTemplates.classList.remove('hidden');
     }
     function hideExtraTemplates() {
@@ -932,10 +956,26 @@
       feedbackTemplates.classList.add('hidden');
       customTemplates.classList.add('hidden');
       extraTemplates.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.add('hidden'); // ✅ NEW
       emailTemplates.classList.remove('hidden');
     }
     function hideEmailTemplates() {
       emailTemplates.classList.add('hidden');
+      mainButtons.classList.remove('hidden');
+    }
+
+    // ✅✅✅ NEW: Test Section show/hide
+    function showTestTemplates() {
+      mainButtons.classList.add('hidden');
+      feedbackTemplates.classList.add('hidden');
+      customTemplates.classList.add('hidden');
+      extraTemplates.classList.add('hidden');
+      emailTemplates.classList.add('hidden');
+      showFeedBackFATS.classList.add('hidden');
+      if (testTemplates) testTemplates.classList.remove('hidden');
+    }
+    function hideTestTemplates() {
+      if (testTemplates) testTemplates.classList.add('hidden');
       mainButtons.classList.remove('hidden');
     }
 
