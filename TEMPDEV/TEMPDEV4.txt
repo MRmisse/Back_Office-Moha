@@ -1,0 +1,11 @@
+title :
+Scheduled Changes Issue
+
+description :
+
+Dear Team ,
+There is an issue with the customer’s subscription renewal. The renewal is scheduled but has not been completed yet, as shown in the attached image.
+Kindly follow up on this matter. Thank you.
+Account : 
+SAPBrimId : 
+Case : 
