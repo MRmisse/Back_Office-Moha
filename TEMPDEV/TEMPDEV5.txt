@@ -1,0 +1,23 @@
+Set a title to your ticket: 
+Refund Request
+
+description : 
+
+Kind regards,
+The customer has been charged twice, while the subscription was renewed only once.
+Kindly follow up on this issue. Thank you
+Account: 
+SAPBrimId : 
+Order ID : 
+Order Number : 
+Card number : 
+Payment state : Deposited
+Date : 
+Amount : 15000 iq
+------------------------------------------------------------------------------
+Order ID : 2
+Order Number : 
+Card number : 
+Payment state : Deposited
+Date : 
+Amount : 15000 iq
